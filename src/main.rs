@@ -1,10 +1,11 @@
+mod state;
 mod controller;
 
+use quicksilver::{
+    geom::Vector,
+    lifecycle::{run, Settings},
+};
+
 fn main() {
-    
-    let mut bongo = controller::Controller::new();
-    
-    loop {
-        bongo.print();
-    }
+    run::<state::State>("Bongosero", Vector::new(800, 600), Settings::default());
 }
