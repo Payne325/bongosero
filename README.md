@@ -7,3 +7,5 @@ I began developing this game as a way of pracising developing with the Rust Prog
 The game will be controlled using official Nintendo Donkey Konga Bongo controllers. Partially because I think its funny, but also because the controllers are so satisfying to use that they lend themselves well for fun gameplay (especially for a game about smashing stuff).
 
 This is also where the git repository gets its name from ;)
+
+I created all the pixel art myself using Piskel https://www.piskelapp.com/ 
