@@ -8,4 +8,4 @@ The game will be controlled using official Nintendo Donkey Konga Bongo controlle
 
 This is also where the git repository gets its name from ;)
 
-I created all the pixel art myself using Piskel https://www.piskelapp.com/ 
+I created all the pixel art myself using <a href="https://www.piskelapp.com/">Piskel</a>.
