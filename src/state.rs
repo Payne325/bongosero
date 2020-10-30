@@ -1,58 +1,42 @@
 //use crate::controller;
 use crate::debug_controller;
+use crate::world;
 use quicksilver as qs;
-use quicksilver::geom::Shape;
-use quicksilver::graphics as gfx;
-use quicksilver::graphics::{Background::Img, Image};
-use quicksilver::lifecycle::Asset;
-
+use quicksilver::{
+   geom::{Rectangle, Vector},
+   graphics::Image,
+   Input, Graphics,
+};
 
 pub struct State {
-    //m_bongo : controller::Controller,
-    m_background : Asset<Image>,
-    m_controller : debug_controller::Debug_Controller
+   //m_bongo : controller::Controller,
+   m_controller: debug_controller::DebugController,
+   m_world: world::World,
 }
 
-impl qs::lifecycle::State for State {
-    fn new() -> qs::Result<Self> {
+impl State {
+   pub fn new() -> qs::Result<Self> {
+      //let bongo = controller::Controller::new();
+      let controller = debug_controller::DebugController::new();
+      let world = world::World::new();
 
-        //let bongo = controller::Controller::new();
-        let background = Asset::new(Image::load("background.png"));
-        let controller = debug_controller::Debug_Controller::new();
+      Ok(Self {
+         //m_bongo : bongo,
+         m_controller: controller,
+         m_world: world
+      })
+   }
 
-        Ok(
-            Self {
-                //m_bongo : bongo,
-                m_background : background,
-                m_controller : controller
-            }
-        )
-    }
-
-    fn update(&mut self, window: &mut qs::lifecycle::Window) -> qs::Result<()> {
-        
-      self.m_controller.poll(window);
+   pub fn update(&mut self, input: &Input) {
+      self.m_controller.poll(input);
       self.m_controller.print();
-        //self.m_bongo.poll();
-        //self.m_bongo.print();
+      self.m_world.maintain();
+      //self.m_bongo.poll();
+      //self.m_bongo.print();
+   }
 
-      Ok(())
-    }
-
-    fn draw(&mut self, window: &mut qs::lifecycle::Window) -> qs::Result<()> {
-        
-        let mut result = window.clear(gfx::Color::BLACK);
-
-        result = self.m_background
-        .execute(|image| {
-                window.draw(
-                    &image.area().with_center((400, 300)), 
-                    Img(&image));
-
-                    Ok(())
-            }
-        );
-
-        Ok(())
-    }
+   pub fn position_data(&self) -> Vector {
+      //Expand this to return struct of player, bullet and enemy data
+      self.m_world.get_player_position()
+   }
 }

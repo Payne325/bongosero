@@ -1,20 +1,16 @@
 use quicksilver as qs;
-use quicksilver::input::{ButtonState, Gamepad, GamepadButton};
 
-pub struct Debug_Controller {
+pub struct DebugController {
    m_a: bool,
    m_b: bool,
    m_x: bool,
    m_y: bool,
    m_left: bool,
-   m_right: bool,
-   m_gamepads: Vec<Gamepad>,
-   m_gamepad_found: bool
+   m_right: bool
 }
 
-// Controller used for debuging the game without the bongo controller,
-// Configured with xbox controller in mind.
-impl Debug_Controller {
+// Controller used for debuging the game without the bongo controller, keyboard
+impl DebugController {
    pub fn new() -> Self {
       Self {
          m_a: false,
@@ -22,50 +18,17 @@ impl Debug_Controller {
          m_x: false,
          m_y: false,
          m_left: false,
-         m_right: false,
-         m_gamepads: Vec::new(),
-         m_gamepad_found: false
+         m_right: false
       }
    }
 
-   pub fn poll(&mut self, window: &mut qs::lifecycle::Window) {
-      if self.m_gamepad_found == false {
-         self.m_gamepads = window.gamepads().to_vec();
-         
-         if self.m_gamepads.len() > 0 {
-            println!("Gamepad found");
-            self.m_gamepad_found = true;
-         }
-      }
-
-      if self.m_gamepad_found {
-         ()
-      }
-
-      self.m_a = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::FaceDown] == ButtonState::Pressed);
-      self.m_b = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::FaceRight] == ButtonState::Pressed);
-      self.m_x = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::FaceLeft] == ButtonState::Pressed);
-      self.m_y = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::FaceUp] == ButtonState::Pressed);
-      self.m_left = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::DpadLeft] == ButtonState::Pressed);
-      self.m_right = self
-         .m_gamepads
-         .iter()
-         .any(|pad| pad[qs::input::GamepadButton::DpadRight] == ButtonState::Pressed);
+   pub fn poll(&mut self, input: &qs::Input) {
+      self.m_a = input.key_down(qs::input::Key::Space);
+      self.m_b = input.key_down(qs::input::Key::X);
+      self.m_x = input.key_down(qs::input::Key::C);
+      self.m_y = input.key_down(qs::input::Key::V);
+      self.m_left = input.key_down(qs::input::Key::Left);
+      self.m_right = input.key_down(qs::input::Key::Right);
    }
 
    pub fn print(&self) {
