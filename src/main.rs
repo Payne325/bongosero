@@ -1,5 +1,5 @@
 mod state;
-mod controller;
+mod debug_controller;
 
 use quicksilver::{
     geom::Vector,
