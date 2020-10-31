@@ -5,4 +5,4 @@ Decided to handle the controller after.
 Spent an afternoon updating to latest quicksilver interface changes.
 
 31/10/20
-After that, began focusing on implementing the game with keybaord and mouse controls
+After that, began focusing on implementing the game with keybaord and mouse controls, being careful to provide a suitable interface for the camera/bongo combination.

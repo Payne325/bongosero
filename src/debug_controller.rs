@@ -22,7 +22,8 @@ pub struct DebugController {
    m_x: bool,
    m_y: bool,
    m_left: bool,
-   m_right: bool
+   m_right: bool,
+   m_firing: bool
 }
 
 // Controller used for debuging the game without the bongo controller, keyboard
@@ -34,11 +35,13 @@ impl DebugController {
          m_x: false,
          m_y: false,
          m_left: false,
-         m_right: false
+         m_right: false,
+         m_firing: false
       }
    }
 
    pub fn poll(&mut self, input: &qs::Input) -> UserCommand {
+           
       self.m_a = input.key_down(qs::input::Key::Space);
       self.m_b = input.key_down(qs::input::Key::X);
       self.m_x = input.key_down(qs::input::Key::C);
@@ -55,7 +58,16 @@ impl DebugController {
          move_dir += Vector::new(1.0, 0.0);
       }
 
-      UserCommand::new(move_dir, self.m_a)
+      let shoot = |firing: bool, a_down: bool| -> bool {
+         if !firing && a_down {
+            return true
+         }        
+         false
+      }(self.m_firing, self.m_a);
+
+      self.m_firing = self.m_a;
+
+      UserCommand::new(move_dir, shoot)
    }
 
    pub fn print(&self) {
