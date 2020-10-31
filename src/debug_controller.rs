@@ -1,4 +1,20 @@
 use quicksilver as qs;
+use quicksilver::geom::Vector;
+
+pub struct UserCommand {
+   pub m_move_dir: Vector,
+   pub m_fire_bullet: bool,
+}
+
+impl UserCommand {
+   pub fn new(dir: Vector, fire: bool) -> UserCommand {
+
+      UserCommand {
+         m_move_dir: dir,
+         m_fire_bullet: fire,
+      }
+   }
+}
 
 pub struct DebugController {
    m_a: bool,
@@ -22,26 +38,26 @@ impl DebugController {
       }
    }
 
-   pub fn poll(&mut self, input: &qs::Input) {
+   pub fn poll(&mut self, input: &qs::Input) -> UserCommand {
       self.m_a = input.key_down(qs::input::Key::Space);
       self.m_b = input.key_down(qs::input::Key::X);
       self.m_x = input.key_down(qs::input::Key::C);
       self.m_y = input.key_down(qs::input::Key::V);
       self.m_left = input.key_down(qs::input::Key::Left);
       self.m_right = input.key_down(qs::input::Key::Right);
+
+      let mut move_dir = Vector::new(0.0, 0.0);
+
+      if self.m_left && !self.m_right {
+         move_dir += Vector::new(-1.0, 0.0);
+      }
+      else if !self.m_left && self.m_right {
+         move_dir += Vector::new(1.0, 0.0);
+      }
+
+      UserCommand::new(move_dir, self.m_a)
    }
 
-   pub fn shoot(&self) -> bool {
-      self.m_a
-   }
-
-   pub fn left(&self) -> bool {
-      self.m_left
-   }
-
-   pub fn right(&self) -> bool {
-      self.m_right
-   }
    pub fn print(&self) {
       if self.m_a {
          println!("A Button Pressed");

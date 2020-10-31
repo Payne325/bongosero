@@ -1,22 +1,7 @@
 use crate::phys::{Phys};
+use crate::debug_controller::UserCommand;
 use quicksilver::geom::{Vector};
 
-pub struct UserInput {
-   m_left: bool,
-   m_right: bool,
-   m_shoot: bool,
-}
-
-impl UserInput {
-   pub fn new(left: bool, right: bool, shoot: bool) -> UserInput {
-
-      Self {
-         m_left: left,
-         m_right: right,
-         m_shoot: shoot,
-      }
-   }
-}
 pub struct World {
    m_phys: Phys,
    m_player: u64,
@@ -31,7 +16,7 @@ impl World {
 
       let player = phys
          .create_body()
-         .set_pos(Vector::new(400.0, 516.0))
+         .set_pos(Vector::new(368.0, 516.0)) //x coord = (screen width/2) - (sprite width/2)
          .set_vel(Vector::new(0.0, 0.0))
          .set_radius(64.0)
          .set_mass(1.0)
@@ -46,32 +31,23 @@ impl World {
          }
    }
 
-   pub fn maintain(&mut self, input: UserInput) {
+   pub fn maintain(&mut self, command: UserCommand) {
       {
          let player_speed = 400.0;
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
-
-         if input.m_left {
-            player.set_vel(Vector::new(-player_speed, 0.0));
-         }
-         else if input.m_right{
-            player.set_vel(Vector::new(player_speed, 0.0));
-         }
-         else {
-            player.set_vel(Vector::new(0.0, 0.0));
-         }
+         player.set_vel(command.m_move_dir * player_speed);
       }
 
       self.m_phys.tick(1.0/60.0);
 
       let bullet_speed = 1000.0;
 
-      if input.m_shoot {
+      if command.m_fire_bullet {
          let player_pos = self.get_player_position();
 
          self.m_phys
             .create_body()
-            .set_pos(player_pos + Vector::new(0.0, 10.0))
+            .set_pos(player_pos + Vector::new(16.0, -16.0)) //x coord = player.x + bullet height
             .set_vel(Vector::new(0.0, -bullet_speed))
             .set_radius(16.0)
             .set_mass(1.0);

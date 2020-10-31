@@ -41,13 +41,10 @@ impl Game {
    }
 
    pub fn update(&mut self, input: &Input) {
-      self.m_controller.poll(input);
+      let user_commands = self.m_controller.poll(input);
+      //Todo: Add debug flag to control printing controller poll results
       self.m_controller.print();
-
-      let usr_in = world::UserInput::new(self.m_controller.left(), self.m_controller.right(), self.m_controller.shoot());
-      self.m_world.maintain(usr_in);
-      //self.m_bongo.poll();
-      //self.m_bongo.print();
+      self.m_world.maintain(user_commands);
    }
 
    pub fn draw(&mut self, mut gfx: Graphics) -> Graphics { 
