@@ -40,20 +40,20 @@ impl Body {
       self
    }
 
-   fn step(&mut self, dt: f32) {
-      self.vel += self.force_record / self.mass;
-      self.force_record = Vector::ZERO;
+   // fn step(&mut self, dt: f32) {
+   //    self.vel += self.force_record / self.mass;
+   //    self.force_record = Vector::ZERO;
 
-      self.pos += self.vel * dt;
-   }
+   //    self.pos += self.vel * dt;
+   // }
 
-   pub fn apply_impulse(&mut self, impulse: Vector) {
-      self.vel += impulse / self.mass;
-   }
+   // pub fn apply_impulse(&mut self, impulse: Vector) {
+   //    self.vel += impulse / self.mass;
+   // }
 
-   pub fn apply_force(&mut self, force: Vector) {
-      self.force_record += force;
-   }
+   // pub fn apply_force(&mut self, force: Vector) {
+   //    self.force_record += force;
+   // }
 }
 
 pub struct Phys {
@@ -97,34 +97,34 @@ impl Phys {
       self.bodies.get(&id).map(|b| b.borrow())
    }
 
-   pub fn get_body_mut(&mut self, id: u64) -> Option<RefMut<Body>> {
-      self.bodies.get(&id).map(|b| b.borrow_mut())
-   }
+   // pub fn get_body_mut(&mut self, id: u64) -> Option<RefMut<Body>> {
+   //    self.bodies.get(&id).map(|b| b.borrow_mut())
+   // }
 
-   pub fn delete_body(&mut self, id: u64) -> bool {
-      self.bodies.remove(&id).is_some()
-   }
+   // pub fn delete_body(&mut self, id: u64) -> bool {
+   //    self.bodies.remove(&id).is_some()
+   // }
 
-   pub fn bodies(&self) -> impl Iterator<Item = Ref<Body>> {
-      self.bodies.values().map(|b| b.borrow())
-   }
+   // pub fn bodies(&self) -> impl Iterator<Item = Ref<Body>> {
+   //    self.bodies.values().map(|b| b.borrow())
+   // }
 
-   pub fn bodies_mut(&self) -> impl Iterator<Item = RefMut<Body>> {
-      self.bodies.values().map(|b| b.borrow_mut())
-   }
+   // pub fn bodies_mut(&self) -> impl Iterator<Item = RefMut<Body>> {
+   //    self.bodies.values().map(|b| b.borrow_mut())
+   // }
 
    fn new_id(&mut self) -> u64 {
       self.id_counter += 1;
       self.id_counter
    }
 
-   pub fn tick(&mut self, dt: f32) {
-      let dt = dt;
-      // Propagate positions
-      for mut body in self.bodies_mut() {
-         let grav_force = self.gravity * body.mass;
-         body.apply_force(grav_force);
-         body.step(dt);
-      }
-   }
+   // pub fn tick(&mut self, dt: f32) {
+   //    let dt = dt;
+   //    // Propagate positions
+   //    for mut body in self.bodies_mut() {
+   //       let grav_force = self.gravity * body.mass;
+   //       body.apply_force(grav_force);
+   //       body.step(dt);
+   //    }
+   // }
 }

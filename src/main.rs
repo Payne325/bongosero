@@ -44,7 +44,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
       let player_region = Rectangle::new(state.position_data(), player_sprite.size());
       gfx.draw_image(&player_sprite, player_region);
 
-      let res = gfx.present(&window);
+      let _res = gfx.present(&window);
 
       //Handle exit
       if input.key_down(Key::Escape){

@@ -2,11 +2,7 @@
 use crate::debug_controller;
 use crate::world;
 use quicksilver as qs;
-use quicksilver::{
-   geom::{Rectangle, Vector},
-   graphics::Image,
-   Input, Graphics,
-};
+use quicksilver::{geom::Vector, Input};
 
 pub struct State {
    //m_bongo : controller::Controller,
