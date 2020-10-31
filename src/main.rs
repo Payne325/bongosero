@@ -28,6 +28,8 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
    let background_region = Rectangle::new(Vector::new(0.0, 0.0), background.size());
 
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;
+   let bullet_sprite = Image::load(&gfx, "bullet.png").await?;
+
    let mut state = state::State::new().unwrap();
 
    println!("State initialised...\n");
@@ -43,6 +45,13 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
 
       let player_region = Rectangle::new(state.position_data(), player_sprite.size());
       gfx.draw_image(&player_sprite, player_region);
+
+      let bullets = state.bullets();
+
+      for b in bullets {
+         let region = Rectangle::new(b, bullet_sprite.size());
+         gfx.draw_image(&bullet_sprite, region);
+      }
 
       let _res = gfx.present(&window);
 

@@ -1,8 +1,10 @@
 //use crate::controller;
 use crate::debug_controller;
 use crate::world;
+use crate::phys::{Body};
 use quicksilver as qs;
 use quicksilver::{geom::Vector, Input};
+use std::collections::VecDeque;
 
 pub struct State {
    //m_bongo : controller::Controller,
@@ -36,5 +38,19 @@ impl State {
    pub fn position_data(&self) -> Vector {
       //Expand this to return struct of player, bullet and enemy data
       self.m_world.get_player_position()
+   }
+
+   pub fn bullets(&self) -> VecDeque<Vector> {
+      let bodies = self.m_world.phys().bodies();
+
+      let mut positions: VecDeque<Vector> = VecDeque::new();
+
+      for body in bodies {
+         if !body.is_player{
+            positions.push_back(body.pos);
+         }
+      }
+
+      positions
    }
 }

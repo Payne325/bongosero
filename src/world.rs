@@ -1,8 +1,5 @@
 use crate::phys::{Phys};
 use quicksilver::geom::{Vector};
-// use std::{
-//    collections::{VecDeque},
-//};
 
 pub struct UserInput {
    m_left: bool,
@@ -14,8 +11,8 @@ impl UserInput {
    pub fn new(left: bool, right: bool, shoot: bool) -> UserInput {
 
       Self {
-         m_left: left, 
-         m_right: right, 
+         m_left: left,
+         m_right: right,
          m_shoot: shoot,
       }
    }
@@ -29,7 +26,7 @@ pub struct World {
 
 impl World {
    pub fn new() -> Self {
-      
+
       let mut phys = Phys::new().with_gravity(Vector::new(0.0, 16.0));
 
       let player = phys
@@ -42,7 +39,7 @@ impl World {
          .id;
 
          Self {
-            m_phys: phys, 
+            m_phys: phys,
             m_player: player,
             // m_enemies: VecDeque::new(),
             // m_enemy_spawn_tick: 80
@@ -51,14 +48,14 @@ impl World {
 
    pub fn maintain(&mut self, input: UserInput) {
       {
-         let speed = 400.0;
+         let player_speed = 400.0;
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
-      
+
          if input.m_left {
-            player.set_vel(Vector::new(-speed, 0.0));
+            player.set_vel(Vector::new(-player_speed, 0.0));
          }
          else if input.m_right{
-            player.set_vel(Vector::new(speed, 0.0));
+            player.set_vel(Vector::new(player_speed, 0.0));
          }
          else {
             player.set_vel(Vector::new(0.0, 0.0));
@@ -67,15 +64,28 @@ impl World {
 
       self.m_phys.tick(1.0/60.0);
 
-      // if input.m_shoot {
-      //    //gen bullet
-      // }
+      let bullet_speed = 1000.0;
+
+      if input.m_shoot {
+         let player_pos = self.get_player_position();
+
+         self.m_phys
+            .create_body()
+            .set_pos(player_pos + Vector::new(0.0, 10.0))
+            .set_vel(Vector::new(0.0, -bullet_speed))
+            .set_radius(16.0)
+            .set_mass(1.0);
+      }
    }
 
    // pub fn tick(&mut self, dt: f32) {
    //    //Create enemies on timer based system
    // }
 
+   pub fn phys(&self) -> &Phys {
+      &self.m_phys
+   }
+   
    pub fn get_player_position(&self) -> Vector {
       self.m_phys.get_body(self.m_player).unwrap().pos
    }
