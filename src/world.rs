@@ -4,10 +4,25 @@ use quicksilver::geom::{Vector};
 //    collections::{VecDeque},
 //};
 
+pub struct UserInput {
+   m_left: bool,
+   m_right: bool,
+   m_shoot: bool,
+}
+
+impl UserInput {
+   pub fn new(left: bool, right: bool, shoot: bool) -> UserInput {
+
+      Self {
+         m_left: left, 
+         m_right: right, 
+         m_shoot: shoot,
+      }
+   }
+}
 pub struct World {
    m_phys: Phys,
    m_player: u64,
-   // m_tick_count: u64,
    // m_enemies: VecDeque<u64>,
    // m_enemy_spawn_tick: u64,
 }
@@ -29,25 +44,32 @@ impl World {
          Self {
             m_phys: phys, 
             m_player: player,
-            // m_tick_count: 0,
             // m_enemies: VecDeque::new(),
             // m_enemy_spawn_tick: 80
          }
    }
 
-   pub fn maintain(&mut self) {
+   pub fn maintain(&mut self, input: UserInput) {
+      {
+         let speed = 400.0;
+         let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
+      
+         if input.m_left {
+            player.set_vel(Vector::new(-speed, 0.0));
+         }
+         else if input.m_right{
+            player.set_vel(Vector::new(speed, 0.0));
+         }
+         else {
+            player.set_vel(Vector::new(0.0, 0.0));
+         }
+      }
 
-      //let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
+      self.m_phys.tick(1.0/60.0);
 
-      //If left
-      //player.apply_impulse(Vector::new(-1.0, 0.0));
-
-      //If right
-      //player.apply_impulse(Vector::new(1.0, 0.0));
-
-      //if a/bongo drum
-         //gen bullet
-
+      // if input.m_shoot {
+      //    //gen bullet
+      // }
    }
 
    // pub fn tick(&mut self, dt: f32) {

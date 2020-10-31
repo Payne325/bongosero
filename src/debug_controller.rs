@@ -31,6 +31,17 @@ impl DebugController {
       self.m_right = input.key_down(qs::input::Key::Right);
    }
 
+   pub fn shoot(&self) -> bool {
+      self.m_a
+   }
+
+   pub fn left(&self) -> bool {
+      self.m_left
+   }
+
+   pub fn right(&self) -> bool {
+      self.m_right
+   }
    pub fn print(&self) {
       if self.m_a {
          println!("A Button Pressed");

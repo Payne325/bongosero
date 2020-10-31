@@ -26,7 +26,9 @@ impl State {
    pub fn update(&mut self, input: &Input) {
       self.m_controller.poll(input);
       self.m_controller.print();
-      self.m_world.maintain();
+
+      let usr_in = world::UserInput::new(self.m_controller.left(), self.m_controller.right(), self.m_controller.shoot());
+      self.m_world.maintain(usr_in);
       //self.m_bongo.poll();
       //self.m_bongo.print();
    }
