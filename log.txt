@@ -1,4 +1,8 @@
+30/10/20
 Wanted to use gc controller, wasnt supported by quick silver out of the box -> understandable. Carried on with keyboard to develop the game itself.
 Decided to handle the controller after.
 
 Spent an afternoon updating to latest quicksilver interface changes.
+
+31/10/20
+After that, began focusing on implementing the game with keybaord and mouse controls

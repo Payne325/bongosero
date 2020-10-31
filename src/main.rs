@@ -1,4 +1,4 @@
-mod state;
+mod game;
 mod debug_controller;
 mod world;
 mod phys;
@@ -22,37 +22,29 @@ fn main() {
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
-   
-   //Initialise background 
-   let background = Image::load(&gfx, "background.png").await?;
-   let background_region = Rectangle::new(Vector::new(0.0, 0.0), background.size());
+   /*
+    * This function serves as the control loop, on exit the game ends.
+    * Todo: Add a splash screen and menu for options, camera calibration and highscore data. 
+   */
 
+   //Load images 
+   let background = Image::load(&gfx, "background.png").await?;
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;
    let bullet_sprite = Image::load(&gfx, "bullet.png").await?;
 
-   let mut state = state::State::new().unwrap();
+   //Construct object to handle main game functionality.
+   let mut game = game::Game::new(background, player_sprite, bullet_sprite).unwrap();
 
-   println!("State initialised...\n");
+   println!("Game manager initialised...\n");
 
    loop {
+      //Handle keyboard input
+      //Todo: replace this with bongo/webcam controls
       while let Some(_) = input.next_event().await {}
-      //Game logic
-      state.update(&input);
+      game.update(&input);
 
       //Draw
-      gfx.clear(Color::BLACK);
-      gfx.draw_image(&background, background_region);
-
-      let player_region = Rectangle::new(state.position_data(), player_sprite.size());
-      gfx.draw_image(&player_sprite, player_region);
-
-      let bullets = state.bullets();
-
-      for b in bullets {
-         let region = Rectangle::new(b, bullet_sprite.size());
-         gfx.draw_image(&bullet_sprite, region);
-      }
-
+      gfx = game.draw(gfx);
       let _res = gfx.present(&window);
 
       //Handle exit
