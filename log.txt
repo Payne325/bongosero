@@ -6,3 +6,15 @@ Spent an afternoon updating to latest quicksilver interface changes.
 
 31/10/20
 After that, began focusing on implementing the game with keybaord and mouse controls, being careful to provide a suitable interface for the camera/bongo combination.
+
+November + December + January
+Moved away from the game to develop the face capture library as a seperate project. See seperate log for notes
+
+24/1/2021
+First stab at integrating the face traking controller into bongosero, hooked up to the library ok, but the player sprite jumps around a lot
+Need to think of a good way to smooth out movement.
+Ideas:
+- Keep a running history of bboxes and average out the centre points
+- Implement a PID loop
+- Implement a "dead zone", so only big enough head movements are recorded
+- Some combination of the ideas above...

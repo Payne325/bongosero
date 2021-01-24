@@ -1,5 +1,6 @@
 mod game;
-mod debug_controller;
+mod controller;
+mod bongosero_controller;
 mod world;
 mod phys;
 
@@ -36,7 +37,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
    let mut game = game::Game::new(background, player_sprite, bullet_sprite).unwrap();
 
    println!("Game manager initialised...\n");
-
+//test test test, i fucked up my hand yesterday at the dump and had to go to a and e. I wrote this sentence to see how well i can type.,,,
    loop {
       //Handle keyboard input
       //Todo: replace this with bongo/webcam controls
