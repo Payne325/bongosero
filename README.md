@@ -12,6 +12,8 @@ In case you were wondering, someone who plays the bongos is called a bongosero -
 I some of the pixel art myself using <a href="https://www.piskelapp.com/">Piskel</a>.
 
 ## Dependencies
-Game can be built with cargo, this will handle all dependencies except libusb.
+Game can be built with cargo, this will handle all dependencies except libusb and opencv.
 For Linux distros it is likely you already have libusb installed.
 For Windows you may have to install it <a href="https://github.com/libusb/libusb/wiki/Windows">manually</a>.
+
+For opencv installation instructions, check the opencv rust crate 
