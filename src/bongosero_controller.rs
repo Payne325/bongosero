@@ -7,7 +7,7 @@ use std::sync::mpsc;
 
 type Boundingbox = ((i32, i32), (i32, i32));
 
-const MOVE_DEAD_ZONE: i32 = 5;
+const MOVE_DEAD_ZONE: i32 = 3;
 
 pub struct BongoseroController {
    m_a: bool,
@@ -16,7 +16,8 @@ pub struct BongoseroController {
    m_bbox_receiver : mpsc::Receiver<Boundingbox>,
    m_terminate_receiver : mpsc::Receiver<bool>,
    m_prev_position : i32,
-   m_speed : f32
+   m_velocity_history : Vec<i32>,
+   m_speed: f32
 }
 
 // Controller used for debuging the game without the bongo controller, keyboard
@@ -63,7 +64,8 @@ impl controller::Controller for BongoseroController {
          m_bbox_receiver: bbox_receiver,
          m_terminate_receiver: terminate_receiver,
          m_prev_position : initial_position,
-         m_speed : 5.0
+         m_velocity_history : Vec::with_capacity(8),
+         m_speed: 200.0
       }
    }
    
@@ -80,13 +82,26 @@ impl controller::Controller for BongoseroController {
             let new_pos = (t.1.0 + t.0.0)/2;
             let move_vec = new_pos - self.m_prev_position;
 
-            if move_vec.abs() > MOVE_DEAD_ZONE { 
-               if move_vec > 0 {
-                  move_dir += Vector::new(-1.0, 0.0);
-               }
-               else if move_vec < 0 {
-                  move_dir += Vector::new(1.0, 0.0);
-               }
+            if self.m_velocity_history.len() == 8 {
+               self.m_velocity_history.pop();
+            }
+
+            self.m_velocity_history.push(move_vec);
+
+            let mut total_vel_history = 0;
+
+            for i in 0..self.m_velocity_history.len() {
+               total_vel_history += self.m_velocity_history[i];
+            }
+
+            total_vel_history = total_vel_history/self.m_velocity_history.len() as i32;
+
+            if total_vel_history.abs() > MOVE_DEAD_ZONE { 
+
+               self.m_velocity_history.clear();
+               move_dir = Vector::new(-total_vel_history as f32, 0.0);
+
+               move_dir *= self.m_speed;
 
                self.m_prev_position = new_pos;
             }

@@ -34,10 +34,10 @@ impl World {
    pub fn maintain(&mut self, command: UserCommand) {
       {
          //let player_speed = 400.0; // debug controller
-         let player_speed = 800.0; // bongosero controller
+         //let player_speed = 800.0; // bongosero controller
 
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
-         player.set_vel(command.m_move_dir * player_speed);
+         player.set_vel(command.m_move_dir);
       }
 
       self.m_phys.tick(1.0/60.0);
