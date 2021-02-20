@@ -27,3 +27,11 @@ Response to ideas for smoothing out movement.
 - Dead zone -> Will attempt this first
 - Running history -> Good but could be unnecessary, attempt if deadzone fails.
 - PID loop -> N/A for this problem, this is ideal for automation problems.
+
+Dead zone made a big difference but the player movement doesn't look fluid. To combat this I created a history of recorded velocities (meaning offsets from previous position), and used the average velocity when we exceeded the dead zone.
+Not quite as smooth as I'd like but a bit better. The way the velocities is calculated isnt great. Its based on the last position we actually moved the player to, not the last one we attempted to move to.
+So the velocities always get larger until they are used (history is wiped each time we actually move).
+
+Other issues to resolve
+- the "position" is in ftrak coordinate space instead of the game's space. Need to scale the bbox value for more accurate positioning.
+- the game limits the player from exceeding the bounds, but the controller has no knowledge of this, meaning velocities get recorded even though we dont move.
