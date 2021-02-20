@@ -7,6 +7,8 @@ use std::sync::mpsc;
 
 type Boundingbox = ((i32, i32), (i32, i32));
 
+const MOVE_DEAD_ZONE: i32 = 5;
+
 pub struct BongoseroController {
    m_a: bool,
    m_firing: bool,
@@ -40,14 +42,14 @@ impl controller::Controller for BongoseroController {
       });
 
       //Get intial position from f-trak
-      let mut initial_position = 0;
+      let initial_position : i32;
 
       loop {
          let val = bbox_receiver.try_recv();
 
          match val {
             Ok(t) => { 
-               initial_position = t.1.0 - t.0.0;
+               initial_position = (t.1.0 + t.0.0) / 2;
               break;
             },
             Err(_) => { /*println!("ERROR: {}", e);*/ },
@@ -64,7 +66,7 @@ impl controller::Controller for BongoseroController {
          m_speed : 5.0
       }
    }
-
+   
    fn poll(&mut self, input: &qs::Input) -> controller::UserCommand {
            
       self.m_a = input.key_down(qs::input::Key::Space);
@@ -75,15 +77,19 @@ impl controller::Controller for BongoseroController {
 
       match current_bbox {
          Ok(t) => {
-            let new_pos = t.1.0 - t.0.0;
-            if new_pos > self.m_prev_position {
-               move_dir += Vector::new(self.m_speed, 0.0);
-            }
-            else if new_pos < self.m_prev_position {
-               move_dir -= Vector::new(self.m_speed, 0.0);
-            }
+            let new_pos = (t.1.0 + t.0.0)/2;
+            let move_vec = new_pos - self.m_prev_position;
 
-            self.m_prev_position = t.1.0 - t.0.0;
+            if move_vec.abs() > MOVE_DEAD_ZONE { 
+               if move_vec > 0 {
+                  move_dir += Vector::new(-1.0, 0.0);
+               }
+               else if move_vec < 0 {
+                  move_dir += Vector::new(1.0, 0.0);
+               }
+
+               self.m_prev_position = new_pos;
+            }
          },
          Err(_) => { /*println!("ERROR: {}", e);*/ },
       }

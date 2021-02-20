@@ -18,3 +18,12 @@ Ideas:
 - Implement a PID loop
 - Implement a "dead zone", so only big enough head movements are recorded
 - Some combination of the ideas above...
+
+20/2/2021
+Took time off to focus on game jam/coding break.
+Project has been descoped. This is now a demonstration of the idea of playing a space invader/1942 style shoot em up with head tracking controlling player movement.
+
+Response to ideas for smoothing out movement.
+- Dead zone -> Will attempt this first
+- Running history -> Good but could be unnecessary, attempt if deadzone fails.
+- PID loop -> N/A for this problem, this is ideal for automation problems.
