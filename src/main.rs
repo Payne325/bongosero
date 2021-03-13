@@ -1,5 +1,6 @@
 mod game;
-mod debug_controller;
+mod controller;
+mod bongosero_controller;
 mod world;
 mod phys;
 

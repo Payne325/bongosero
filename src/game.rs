@@ -1,7 +1,7 @@
-//use crate::controller;
-use crate::debug_controller;
+use crate::controller::Controller;
+use crate::bongosero_controller;
 use crate::world;
-use crate::phys::{Body};
+// use crate::phys::{Body};
 use quicksilver as qs;
 use quicksilver::{
    geom::{Rectangle, Vector}, 
@@ -13,7 +13,7 @@ use std::collections::VecDeque;
 
 pub struct Game {
    //m_bongo : controller::Controller,
-   m_controller: debug_controller::DebugController,
+   m_controller: bongosero_controller::BongoseroController,
    m_world: world::World,
    m_background: Image,
    m_player_sprite: Image,
@@ -24,7 +24,7 @@ pub struct Game {
 impl Game {
    pub fn new(background: Image, player: Image, bullet: Image) -> qs::Result<Self> {
       //let bongo = controller::Controller::new();
-      let controller = debug_controller::DebugController::new();
+      let controller = bongosero_controller::BongoseroController::new();
       let world = world::World::new();
 
       let background_region = Rectangle::new(Vector::new(0.0, 0.0), background.size());
@@ -43,7 +43,7 @@ impl Game {
    pub fn update(&mut self, input: &Input) {
       let user_commands = self.m_controller.poll(input);
       //Todo: Add debug flag to control printing controller poll results
-      self.m_controller.print();
+      self.m_controller.debug_print();
       self.m_world.maintain(user_commands);
    }
 

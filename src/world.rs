@@ -1,5 +1,5 @@
 use crate::phys::{Phys};
-use crate::debug_controller::UserCommand;
+use crate::controller::UserCommand;
 use quicksilver::geom::{Vector};
 
 pub struct World {
@@ -33,9 +33,17 @@ impl World {
 
    pub fn maintain(&mut self, command: UserCommand) {
       {
-         let player_speed = 400.0;
+         //let player_speed = 400.0; // debug controller
+         //let player_speed = 800.0; // bongosero controller
+
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
-         player.set_vel(command.m_move_dir * player_speed);
+
+         if command.m_pos_EXPERIMENT != Vector::new(0.0, 0.0) {
+            player.set_pos(command.m_pos_EXPERIMENT);
+         }
+         else {
+            player.set_vel(command.m_move_dir);
+         }
       }
 
       self.m_phys.tick(1.0/60.0);
@@ -55,14 +63,32 @@ impl World {
    }
 
    // pub fn tick(&mut self, dt: f32) {
-   //    //Create enemies on timer based system
+   //    //To Do Create enemies on timer based system
    // }
 
    pub fn phys(&self) -> &Phys {
       &self.m_phys
    }
    
-   pub fn get_player_position(&self) -> Vector {
-      self.m_phys.get_body(self.m_player).unwrap().pos
+   pub fn get_player_position(&mut self) -> Vector {
+      let mut pos : Vector;
+
+      {
+         let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
+         pos = player.pos;
+
+         if pos.x < 0.0 {
+            pos.x = 0.0;
+         }
+
+         if pos.x > 784.0 {
+            pos.x = 784.0;
+         }
+
+         //Keep player position bound to game window
+         //Todo: refactor to find a cleaner way to do this.
+         player.set_pos(pos);
+      }
+      pos
    }
 }
