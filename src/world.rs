@@ -37,7 +37,13 @@ impl World {
          //let player_speed = 800.0; // bongosero controller
 
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
-         player.set_vel(command.m_move_dir);
+
+         if command.m_pos_EXPERIMENT != Vector::new(0.0, 0.0) {
+            player.set_pos(command.m_pos_EXPERIMENT);
+         }
+         else {
+            player.set_vel(command.m_move_dir);
+         }
       }
 
       self.m_phys.tick(1.0/60.0);

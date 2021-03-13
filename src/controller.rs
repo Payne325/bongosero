@@ -3,6 +3,7 @@ use quicksilver::geom::Vector;
 pub struct UserCommand {
    pub m_move_dir: Vector,
    pub m_fire_bullet: bool,
+   pub m_pos_EXPERIMENT: Vector,
 }
 
 impl UserCommand {
@@ -11,6 +12,16 @@ impl UserCommand {
       UserCommand {
          m_move_dir: dir,
          m_fire_bullet: fire,
+         m_pos_EXPERIMENT: Vector::new(0.0, 0.0) 
+      }
+   }
+
+   pub fn new_experiment(dir: Vector, pos: Vector, fire: bool) -> UserCommand {
+
+      UserCommand {
+         m_move_dir: dir,
+         m_fire_bullet: fire,
+         m_pos_EXPERIMENT: pos,
       }
    }
 }

@@ -7,7 +7,14 @@ use std::sync::mpsc;
 
 type Boundingbox = ((i32, i32), (i32, i32));
 
-const MOVE_DEAD_ZONE: i32 = 3;
+// Todo: these properties can live somewhere in a singleton/global space.
+// Maybe they can be stored in a settings file? JSON?
+
+const MOVE_DEAD_ZONE: f32 = 3.0;
+
+const SCREEN : (i32, i32) = (800, 600); //Game screen coord space
+const F_TRAK_MAX_BNDS : (i32, i32) = (600, 420); //f-trak coord space -> Todo. Create some sort of calibration routine to get this
+//const TRANS_FTRAK_TO_SCREEN_X: f32 = 1.333; //Conversation factor from f-trak to screen (x)
 
 pub struct BongoseroController {
    m_a: bool,
@@ -15,9 +22,21 @@ pub struct BongoseroController {
    m_terminated : bool,
    m_bbox_receiver : mpsc::Receiver<Boundingbox>,
    m_terminate_receiver : mpsc::Receiver<bool>,
-   m_prev_position : i32,
-   m_velocity_history : Vec<i32>,
-   m_speed: f32
+   m_prev_position : f32,
+   m_velocity_history : Vec<f32>,
+   m_speed: f32,
+   m_begun: bool
+}
+
+fn f_trak_to_screen_coords(position: f32) -> f32 {
+   
+   let edge_of_screen_offset = 20; //Handle literal edge case
+   let min = 0.0 + edge_of_screen_offset as f32; 
+   let max = (F_TRAK_MAX_BNDS.0 - edge_of_screen_offset) as f32;
+   let norm_pos = (position - min) / (max - min);
+
+   //multiply to move to new coord system
+   norm_pos * SCREEN.0 as f32
 }
 
 // Controller used for debuging the game without the bongo controller, keyboard
@@ -43,14 +62,14 @@ impl controller::Controller for BongoseroController {
       });
 
       //Get intial position from f-trak
-      let initial_position : i32;
+      let initial_position : f32;
 
       loop {
          let val = bbox_receiver.try_recv();
 
          match val {
             Ok(t) => { 
-               initial_position = (t.1.0 + t.0.0) / 2;
+               initial_position = f_trak_to_screen_coords((t.1.0 as f32 + t.0.0 as f32) / 2.0);
               break;
             },
             Err(_) => { /*println!("ERROR: {}", e);*/ },
@@ -65,12 +84,22 @@ impl controller::Controller for BongoseroController {
          m_terminate_receiver: terminate_receiver,
          m_prev_position : initial_position,
          m_velocity_history : Vec::with_capacity(8),
-         m_speed: 200.0
+         m_speed: 200.0,
+         m_begun: false
       }
    }
    
    fn poll(&mut self, input: &qs::Input) -> controller::UserCommand {
            
+      if !self.m_begun {
+         //Used to place player at correct position for their given face location
+         self.m_begun = true;
+         return controller::UserCommand::new_experiment(
+            Vector::new(0.0, 0.0), 
+            Vector::new(self.m_prev_position as f32, 516.0), 
+            false)
+      }
+
       self.m_a = input.key_down(qs::input::Key::Space);
       
       //Get the move_dir from f-trak
@@ -79,7 +108,7 @@ impl controller::Controller for BongoseroController {
 
       match current_bbox {
          Ok(t) => {
-            let new_pos = (t.1.0 + t.0.0)/2;
+            let new_pos = f_trak_to_screen_coords((t.1.0 as f32 + t.0.0 as f32) / 2.0);
             let move_vec = new_pos - self.m_prev_position;
 
             if self.m_velocity_history.len() == 8 {
@@ -88,18 +117,18 @@ impl controller::Controller for BongoseroController {
 
             self.m_velocity_history.push(move_vec);
 
-            let mut total_vel_history = 0;
+            let mut total_vel_history = 0.0;
 
             for i in 0..self.m_velocity_history.len() {
                total_vel_history += self.m_velocity_history[i];
             }
 
-            total_vel_history = total_vel_history/self.m_velocity_history.len() as i32;
+            total_vel_history = total_vel_history/self.m_velocity_history.len() as f32;
 
             if total_vel_history.abs() > MOVE_DEAD_ZONE { 
 
                self.m_velocity_history.clear();
-               move_dir = Vector::new(-total_vel_history as f32, 0.0);
+               move_dir = Vector::new(total_vel_history as f32, 0.0);
 
                move_dir *= self.m_speed;
 
@@ -126,7 +155,10 @@ impl controller::Controller for BongoseroController {
          Err(_) => { /*println!("ERROR: {}", e);*/ },
       }
 
-      controller::UserCommand::new(move_dir, shoot)
+      controller::UserCommand::new_experiment(
+         move_dir, 
+         Vector::new(self.m_prev_position as f32, 516.0), 
+         false)
    }
 
    fn debug_print(&self) {
@@ -134,7 +166,7 @@ impl controller::Controller for BongoseroController {
          println!("Space Button Pressed Down!");
       }
 
-      //Todo: Further f-trak relate debug information
+      //Todo: Further f-trak related debug information
       if self.m_terminated {
          println!("f-trak thread was terminated!")
       }
