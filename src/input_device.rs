@@ -12,7 +12,7 @@ impl UserCommand {
       UserCommand {
          m_move_dir: dir,
          m_fire_bullet: fire,
-         m_pos_EXPERIMENT: Vector::new(0.0, 0.0) 
+         m_pos_EXPERIMENT: Vector::ZERO 
       }
    }
 

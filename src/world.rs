@@ -33,12 +33,9 @@ impl World {
 
    pub fn maintain(&mut self, command: UserCommand) {
       {
-         //let player_speed = 400.0; // debug controller
-         //let player_speed = 800.0; // bongosero controller
-
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
 
-         if command.m_pos_EXPERIMENT != Vector::new(0.0, 0.0) {
+         if command.m_pos_EXPERIMENT != Vector::ZERO {
             player.set_pos(command.m_pos_EXPERIMENT);
          }
          else {
