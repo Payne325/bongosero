@@ -47,3 +47,13 @@ Today's entry:
 
 Tidied up the code by separating the controller into a movement and weapon device. These structs will handle comms between a device each anyway, and the separation is
 much cleaner, easier to maintain, and more modular.
+
+TODO SUMMARY:
+
+- Handle keyboard input without quicksilver
+- Handle Bongo input
+- Create JSON file for configurables
+   - Parse JSON and setup game accordingly
+- Implement enemies
+- Implement Music and SFX
+- Replace image assets with better ones
