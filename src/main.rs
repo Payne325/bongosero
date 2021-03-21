@@ -1,6 +1,7 @@
 mod game;
 mod input_device;
 mod bongosero_movement;
+mod debug_weapon;
 mod world;
 mod phys;
 

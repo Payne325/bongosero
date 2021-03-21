@@ -1,5 +1,6 @@
 use crate::input_device::InputDevice;
 use crate::bongosero_movement;
+use crate::debug_weapon;
 use crate::world;
 // use crate::phys::{Body};
 use quicksilver as qs;
@@ -13,6 +14,7 @@ use std::collections::VecDeque;
 
 pub struct Game {
    //m_bongo : controller::Controller,
+   m_weapon_device: debug_weapon::DebugWeapon,
    m_move_device: bongosero_movement::BongoseroMovement,
    m_world: world::World,
    m_background: Image,
@@ -24,6 +26,7 @@ pub struct Game {
 impl Game {
    pub fn new(background: Image, player: Image, bullet: Image) -> qs::Result<Self> {
       //let bongo = controller::Controller::new();
+      let weapon_device = debug_weapon::DebugWeapon::new();
       let move_device = bongosero_movement::BongoseroMovement::new();
       let world = world::World::new();
 
@@ -31,6 +34,7 @@ impl Game {
 
       Ok(Game {
          //m_bongo : bongo,
+         m_weapon_device: weapon_device,
          m_move_device: move_device,
          m_world: world,
          m_background: background,
@@ -41,9 +45,13 @@ impl Game {
    }
 
    pub fn update(&mut self, input: &Input) {
-      let user_commands = self.m_move_device.poll(input);
+      let mut user_commands = self.m_move_device.poll(input);
+      user_commands.m_fire_bullet = self.m_weapon_device.poll(input).m_fire_bullet;
+
       //Todo: Add debug flag to control printing controller poll results
       self.m_move_device.debug_print();
+      self.m_weapon_device.debug_print();
+      
       self.m_world.maintain(user_commands);
    }
 

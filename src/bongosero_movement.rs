@@ -156,7 +156,7 @@ impl input_device::InputDevice for BongoseroMovement {
       input_device::UserCommand::new_experiment(
          move_dir, 
          Vector::new(self.m_prev_position as f32, 516.0), 
-         shoot)
+         false)
    }
 
    fn debug_print(&self) {
