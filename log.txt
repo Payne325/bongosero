@@ -35,3 +35,15 @@ So the velocities always get larger until they are used (history is wiped each t
 Other issues to resolve
 - the "position" is in ftrak coordinate space instead of the game's space. Need to scale the bbox value for more accurate positioning.
 - the game limits the player from exceeding the bounds, but the controller has no knowledge of this, meaning velocities get recorded even though we dont move.
+
+21/3/2021
+Error in commit means log entries lost. Summary:
+
+Managed to resolve smooth movement, accurate position, and exceeding player bounds issues by simplifing the way we handle f-trak input.
+Face position is retrieved, converted to game coords and player position is updated. No more fancy velocity calculations over complicating matters.
+Needs refactor as game is full of experiment code.
+
+Today's entry:
+
+Tidied up the code by separating the controller into a movement and weapon device. These structs will handle comms between a device each anyway, and the separation is
+much cleaner, easier to maintain, and more modular.
