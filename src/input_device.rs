@@ -26,7 +26,7 @@ impl UserCommand {
    }
 }
 
-pub trait Controller {
+pub trait InputDevice {
    //Todo, remove qs input from args. The controller should be able to 
    //query the keyboard without it.
    fn new() -> Self;

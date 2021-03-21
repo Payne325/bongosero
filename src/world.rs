@@ -1,5 +1,5 @@
 use crate::phys::{Phys};
-use crate::controller::UserCommand;
+use crate::input_device::UserCommand;
 use quicksilver::geom::{Vector};
 
 pub struct World {

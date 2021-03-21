@@ -1,7 +1,7 @@
 extern crate f_trak;
 use quicksilver as qs;
 use quicksilver::geom::Vector;
-use crate::controller;
+use crate::input_device;
 use std::thread;
 use std::sync::mpsc;
 
@@ -11,12 +11,10 @@ type Boundingbox = ((i32, i32), (i32, i32));
 // Maybe they can be stored in a settings file? JSON?
 
 const MOVE_DEAD_ZONE: f32 = 3.0;
-
 const SCREEN : (i32, i32) = (800, 600); //Game screen coord space
 const F_TRAK_MAX_BNDS : (i32, i32) = (600, 420); //f-trak coord space -> Todo. Create some sort of calibration routine to get this
-//const TRANS_FTRAK_TO_SCREEN_X: f32 = 1.333; //Conversation factor from f-trak to screen (x)
 
-pub struct BongoseroController {
+pub struct BongoseroMovement {
    m_a: bool,
    m_firing: bool,
    m_terminated : bool,
@@ -40,7 +38,7 @@ fn f_trak_to_screen_coords(position: f32) -> f32 {
 }
 
 // Controller used for debuging the game without the bongo controller, keyboard
-impl controller::Controller for BongoseroController {
+impl input_device::InputDevice for BongoseroMovement {
    fn new() -> Self {
 
       //Todo: relative path
@@ -76,7 +74,7 @@ impl controller::Controller for BongoseroController {
          }
       }
 
-      BongoseroController {
+      BongoseroMovement {
          m_a: false,
          m_firing: false,
          m_terminated: false, 
@@ -89,12 +87,12 @@ impl controller::Controller for BongoseroController {
       }
    }
    
-   fn poll(&mut self, input: &qs::Input) -> controller::UserCommand {
+   fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
            
       if !self.m_begun {
          //Used to place player at correct position for their given face location
          self.m_begun = true;
-         return controller::UserCommand::new_experiment(
+         return input_device::UserCommand::new_experiment(
             Vector::new(0.0, 0.0), 
             Vector::new(self.m_prev_position as f32, 516.0), 
             false)
@@ -155,10 +153,10 @@ impl controller::Controller for BongoseroController {
          Err(_) => { /*println!("ERROR: {}", e);*/ },
       }
 
-      controller::UserCommand::new_experiment(
+      input_device::UserCommand::new_experiment(
          move_dir, 
          Vector::new(self.m_prev_position as f32, 516.0), 
-         false)
+         shoot)
    }
 
    fn debug_print(&self) {

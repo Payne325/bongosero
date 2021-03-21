@@ -1,6 +1,6 @@
 mod game;
-mod controller;
-mod bongosero_controller;
+mod input_device;
+mod bongosero_movement;
 mod world;
 mod phys;
 
