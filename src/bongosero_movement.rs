@@ -53,8 +53,8 @@ impl input_device::InputDevice for BongoseroMovement {
    fn new() -> Self {
 
       //Todo: relative path -> JSON File?
-      let protopath = "D:/Portfolio/f-trak/f-trak/static/deploy.prototxt.txt".to_string();
-      let modelpath = "D:/Portfolio/f-trak/f-trak/static/model.caffemodel".to_string();
+      let protopath = "D:/Portfolio/f-trak/f-trak-test/static/deploy.prototxt.txt".to_string();
+      let modelpath = "D:/Portfolio/f-trak/f-trak-test/static/model.caffemodel".to_string();
       let min_confidence = 0.9;
 
       let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();

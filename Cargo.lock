@@ -492,6 +492,8 @@ dependencies = [
 [[package]]
 name = "f-trak"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aac2b1151e685d4f24aca6564b452728633a5ee8b8308160b8682384cb218e9"
 dependencies = [
  "opencv",
 ]

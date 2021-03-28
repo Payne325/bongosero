@@ -9,5 +9,4 @@ edition = "2018"
 [dependencies]
 #gcnctrlusb = "*"
 quicksilver = "0.4.0"
-# temp until f-trak is published crate
-f-trak = { path = "../f-trak/f-trak" }
+f-trak = "0.1.0"
