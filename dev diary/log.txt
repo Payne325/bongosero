@@ -57,3 +57,17 @@ TODO SUMMARY:
 - Implement enemies
 - Implement Music and SFX
 - Replace image assets with better ones
+
+
+11-7-2021
+
+Now handling bongo controls. Log doen't reflect dev time spent investigating controller research. I ended up looking for a new crate to handle controls that was easier to use.
+Overall though development has slowed to a crawl for this project. Likely to descope end goals and call it a day soon.
+
+TODO SUMMARY:
+
+- Code clean up
+- Use configuration conditional checks to setup game with specific properties
+- Implement enemies if time permits
+- Implement Music and SFX if time permits
+- Replace bullet image assets with better ones
