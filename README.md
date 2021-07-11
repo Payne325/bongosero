@@ -12,7 +12,7 @@ In case you were wondering, someone who plays the bongos is called a bongosero -
 I some of the pixel art myself using <a href="https://www.piskelapp.com/">Piskel</a>.
 
 ## Dependencies
-While the game can be built with cargo, there are a couple of additional dependencies thta need to be handled.
+While the game can be built with cargo, there are a couple of additional dependencies that need to be handled.
 
 ### Face tracking for player movement
 Face tracking is handled by the [`f-trak`](https://github.com/Payne325/f-trak) crate, which relies on the [`opencv-rust`](https://github.com/twistedfall/opencv-rust) crate. Please follow the set up procedure for `opencv-rust` in its documentation.
