@@ -1,6 +1,7 @@
 mod game;
 mod input_device;
 mod bongosero_movement;
+//mod bongosero_weapon;
 mod debug_weapon;
 //mod debug_movement;
 mod world;

@@ -1,5 +1,6 @@
 use crate::input_device::InputDevice;
 use crate::bongosero_movement;
+//use crate::bongosero_weapon;
 use crate::debug_weapon;
 //use crate::debug_movement;
 use crate::world;
@@ -13,7 +14,7 @@ use quicksilver::{
 use std::collections::VecDeque;
 
 pub struct Game {
-   //m_bongo : controller::Controller,
+   //m_weapon_device: bongosero_weapon::BongoseroWeapon,
    m_weapon_device: debug_weapon::DebugWeapon,
    m_move_device: bongosero_movement::BongoseroMovement,
    m_world: world::World,
@@ -25,7 +26,7 @@ pub struct Game {
 
 impl Game {
    pub fn new(background: Image, player: Image, bullet: Image) -> qs::Result<Self> {
-      //let bongo = controller::Controller::new();
+      //let weapon_device = bongosero_weapon::BongoseroWeapon::new();
       let weapon_device = debug_weapon::DebugWeapon::new();
       let move_device = bongosero_movement::BongoseroMovement::new();
       let world = world::World::new();
@@ -33,7 +34,6 @@ impl Game {
       let background_region = Rectangle::new(Vector::new(0.0, 0.0), background.size());
 
       Ok(Game {
-         //m_bongo : bongo,
          m_weapon_device: weapon_device,
          m_move_device: move_device,
          m_world: world,
