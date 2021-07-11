@@ -31,20 +31,19 @@ impl input_device::InputDevice for BongoseroWeapon {
 
    fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
 
-      self.m_adapter.refresh_inputs(); 
+      // Would ensure controller values are absolutely correct but slows down execution significantly.
+      // Doesn't appear to be necessary. 
+      //self.m_adapter.refresh_inputs();
       let controllers = self.m_adapter.read_controllers();
 
       let mut fire_weapon_down = false;
-      for controller in controllers {
-         //Simplest implementation for now. 
-         //Find first connected controller and read its button status
-         if controller.connected() {
-            let buttons = controller.buttons;
+      let controller = &controllers[0];
 
-            //Each GC bongo drum has two buttons. All four of which correspond to one of abxy. 
-            fire_weapon_down = buttons.a() || buttons.b() || buttons.x() || buttons.y();
-            break;            
-         }
+      //Find first controller and read its button status
+      if controller.connected() {
+         let buttons = &controller.buttons;
+         //Each GC bongo drum has two buttons. All four of which correspond to one of abxy. 
+         fire_weapon_down = buttons.a() || buttons.b() || buttons.x() || buttons.y();            
       }
 
       let shoot = |firing: bool, fire_weapon_down: bool| -> bool {
