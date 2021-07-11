@@ -12,8 +12,13 @@ In case you were wondering, someone who plays the bongos is called a bongosero -
 I some of the pixel art myself using <a href="https://www.piskelapp.com/">Piskel</a>.
 
 ## Dependencies
-Game can be built with cargo, this will handle all dependencies except libusb and opencv.
-For Linux distros it is likely you already have libusb installed.
-For Windows you may have to install it <a href="https://github.com/libusb/libusb/wiki/Windows">manually</a>.
+While the game can be built with cargo, there are a couple of additional dependencies that need to be handled.
 
-For opencv installation instructions, check the opencv rust crate 
+### Face tracking for player movement
+Face tracking is handled by the [`f-trak`](https://github.com/Payne325/f-trak) crate, which relies on the [`opencv-rust`](https://github.com/twistedfall/opencv-rust) crate. Please follow the set up procedure for `opencv-rust` in its documentation.
+
+### Handling the Gamecube controller input
+Gamecube Controller input is handled bu the [`gc-adapter`](https://github.com/jam1garner/gc-adapter) crate, which creates a libusb interface to the official Nintendo Gamecube Adapter for Wii U. I believe it should also work with mayflash but this is untested.
+
+For Linux based distros, you shouldn't have any problems.
+For Windows you may have to install the necessary driver for `gc-adapter` to detect any devices. The setup documentation for the [`Dolphin Emulator`](https://dolphin-emu.org/docs/guides/how-use-official-gc-controller-adapter-wii-u/#Windows) provides instructions on how to install this.  
