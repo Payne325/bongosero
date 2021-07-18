@@ -1,15 +1,21 @@
 mod game;
 mod input_device;
-mod bongosero_movement;
-mod bongosero_weapon;
-//mod debug_weapon;
-//mod debug_movement;
 mod world;
 mod phys;
 
+#[cfg(feature = "keyboard")]
+mod keyboard_weapon;
+#[cfg(feature = "keyboard")]
+mod keyboard_movement;
+
+#[cfg(not(feature = "keyboard"))]
+mod bongosero_movement;
+#[cfg(not(feature = "keyboard"))]
+mod bongosero_weapon;
+
 use quicksilver::{
-   geom::{Rectangle, Vector},
-   graphics::{Color, Image},
+   geom::Vector,
+   graphics::Image,
    input::Key,
    run, Graphics, Input, Result, Settings, Window,
 };
@@ -26,11 +32,8 @@ fn main() {
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
-   /*
-    * This function serves as the control loop, on exit the game ends.
-    * Todo: Add a splash screen and menu for options, camera calibration and highscore data. 
-   */
-
+   // This function serves as the control loop, on exit the game ends.
+   
    //Load images 
    let background = Image::load(&gfx, "background.png").await?;
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;

@@ -21,6 +21,37 @@ pub struct BongoseroMovement {
 }
 
 impl BongoseroMovement {
+   pub fn new() -> Self {
+
+      //Todo: relative path -> JSON File?
+      let protopath = "D:/Portfolio/bongosero/static/deploy.prototxt.txt".to_string();
+      let modelpath = "D:/Portfolio/bongosero/static/model.caffemodel".to_string();
+      let min_confidence = 0.9;
+
+      let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
+      let (terminate_transmitter, terminate_receiver) = mpsc::channel::<bool>();
+   
+      thread::spawn(move || {
+         if cfg!(feature = "debug") {
+            println!("DEBUG: Spawned the face capture thread!");
+         }
+
+         let mut face_cap = f_trak::FaceCapture::new(bbox_transmitter, 
+                                                     terminate_transmitter,
+                                                     protopath,
+                                                     modelpath,
+                                                     min_confidence);
+         face_cap.begin_capture();
+      });
+
+      BongoseroMovement {
+         m_terminated: false, 
+         m_bbox_receiver: bbox_receiver,
+         m_terminate_receiver: terminate_receiver,
+         m_prev_position : -1.0,
+      }
+   }
+
    fn f_trak_to_screen_coords(&self, position: f32) -> f32 {
 
       let edge_of_screen_offset = 20; //Handle literal edge case
@@ -50,34 +81,6 @@ impl BongoseroMovement {
 
 // Polls f-trak for player face location and converts to game coords
 impl input_device::InputDevice for BongoseroMovement {
-   fn new() -> Self {
-
-      //Todo: relative path -> JSON File?
-      let protopath = "D:/Portfolio/f-trak/f-trak-test/static/deploy.prototxt.txt".to_string();
-      let modelpath = "D:/Portfolio/f-trak/f-trak-test/static/model.caffemodel".to_string();
-      let min_confidence = 0.9;
-
-      let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
-      let (terminate_transmitter, terminate_receiver) = mpsc::channel::<bool>();
-   
-      thread::spawn(move || {
-         println!("DEBUG: Spawned the face capture thread!");
-         let mut face_cap = f_trak::FaceCapture::new(bbox_transmitter, 
-                                                     terminate_transmitter,
-                                                     protopath,
-                                                     modelpath,
-                                                     min_confidence);
-         face_cap.begin_capture();
-      });
-
-      BongoseroMovement {
-         m_terminated: false, 
-         m_bbox_receiver: bbox_receiver,
-         m_terminate_receiver: terminate_receiver,
-         m_prev_position : -1.0,
-      }
-   }
-   
    fn poll(&mut self, _input: &qs::Input) -> input_device::UserCommand {    
       //Get face location from f-trak
       let new_pos = self.get_current_position();
@@ -101,13 +104,15 @@ impl input_device::InputDevice for BongoseroMovement {
          Err(_) => { /*println!("ERROR: {}", e);*/ },
       }
 
-      input_device::UserCommand::new_experiment(
+      input_device::UserCommand::new_positional_based(
          Vector::ZERO, 
          Vector::new(self.m_prev_position as f32, 516.0), 
          false)
    }
 
    fn debug_print(&self) {
+      if cfg!(not(feature = "debug")) { return; }
+
       //Todo: Further f-trak related debug information
       if self.m_terminated {
          println!("f-trak thread was terminated!")

@@ -10,3 +10,7 @@ edition = "2018"
 gc-adapter = {version = "0.1.2", features = ["libusb"]}
 quicksilver = "0.4.0"
 f-trak = "0.1.0"
+
+[features]
+keyboard = [] # If used, keyboard controls are compiled, else bongo and camera controls used
+debug = [] # If used, will print out debug information to std::out.
