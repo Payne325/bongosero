@@ -8,9 +8,8 @@ pub struct BongoseroWeapon {
    m_adapter : GcAdapter<gc_adapter::LibUsbAdapter<gc_adapter::rusb::GlobalContext>>
 }
 
-impl input_device::InputDevice for BongoseroWeapon {
-
-   fn new() -> Self {
+impl BongoseroWeapon {
+   pub fn new() -> Self {
 
       // get adapter from global context
       let adapter_wrapped = GcAdapter::from_usb();
@@ -27,9 +26,10 @@ impl input_device::InputDevice for BongoseroWeapon {
          m_adapter : adapter,
       }
    }
+}
 
-
-   fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
+impl input_device::InputDevice for BongoseroWeapon {
+   fn poll(&mut self, _input: &qs::Input) -> input_device::UserCommand {
 
       // Would ensure controller values are absolutely correct but slows down execution significantly.
       // Doesn't appear to be necessary. 

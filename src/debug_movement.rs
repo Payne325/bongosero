@@ -9,15 +9,16 @@ pub struct DebugMovement {
    m_right : bool
 }
 
-//Input device to handle player movement, debug device is keyboard
-impl input_device::InputDevice for DebugMovement {
-   fn new() -> Self { 
+impl DebugMovement{
+   pub fn new() -> Self { 
       DebugMovement {       
          m_left : false,
          m_right: false   
       }
    }
+}
 
+impl input_device::InputDevice for DebugMovement {
    fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
       self.m_left = input.key_down(qs::input::Key::Left);
       self.m_right = input.key_down(qs::input::Key::Right);

@@ -6,14 +6,16 @@ pub struct DebugWeapon {
    m_firing: bool
 }
 
-//Input device to handle player weapons fire, debug device is keyboard
-impl input_device::InputDevice for DebugWeapon {
-   fn new() -> Self { 
+impl DebugWeapon {
+   pub fn new() -> Self { 
       DebugWeapon {          
          m_firing: false,
       }
    }
+}
 
+//Input device to handle player weapons fire, debug device is keyboard
+impl input_device::InputDevice for DebugWeapon {
    fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
       let fire_weapon_down = input.key_down(qs::input::Key::Space);
    
