@@ -34,15 +34,16 @@ impl input_device::InputDevice for BongoseroWeapon {
       // Would ensure controller values are absolutely correct but slows down execution significantly.
       // Doesn't appear to be necessary. 
       //self.m_adapter.refresh_inputs();
+
       let controllers = self.m_adapter.read_controllers();
 
       let mut fire_weapon_down = false;
       let controller = &controllers[0];
 
-      //Find first controller and read its button status
+      // Find first controller and read its button status
       if controller.connected() {
          let buttons = &controller.buttons;
-         //Each GC bongo drum has two buttons. All four of which correspond to one of abxy. 
+         // Each GC bongo drum has two buttons. All four buttons correspond to one of abxy. 
          fire_weapon_down = buttons.a() || buttons.b() || buttons.x() || buttons.y();            
       }
 
@@ -55,7 +56,7 @@ impl input_device::InputDevice for BongoseroWeapon {
 
       self.m_firing = fire_weapon_down;
 
-      input_device::UserCommand::new_experiment(Vector::ZERO, Vector::ZERO, shoot)
+      input_device::UserCommand::new_positional_based(Vector::ZERO, Vector::ZERO, shoot)
    }  
 
    fn debug_print(&self) {

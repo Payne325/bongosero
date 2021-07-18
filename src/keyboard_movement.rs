@@ -32,7 +32,7 @@ impl input_device::InputDevice for KeyboardMovement {
          move_dir += Vector::new(1.0, 0.0);
       }
 
-      input_device::UserCommand::new(move_dir*SPEED, false)
+      input_device::UserCommand::new_velocity_based(move_dir*SPEED, false)
    }
 
    fn debug_print(&self) {

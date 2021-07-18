@@ -1,12 +1,10 @@
-use crate::phys::{Phys};
+use crate::phys::Phys;
 use crate::input_device::UserCommand;
-use quicksilver::geom::{Vector};
+use quicksilver::geom::Vector;
 
 pub struct World {
    m_phys: Phys,
    m_player: u64,
-   // m_enemies: VecDeque<u64>,
-   // m_enemy_spawn_tick: u64,
 }
 
 impl World {
@@ -26,8 +24,6 @@ impl World {
          Self {
             m_phys: phys,
             m_player: player,
-            // m_enemies: VecDeque::new(),
-            // m_enemy_spawn_tick: 80
          }
    }
 
@@ -35,8 +31,8 @@ impl World {
       {
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
 
-         if command.m_pos_EXPERIMENT != Vector::ZERO {
-            player.set_pos(command.m_pos_EXPERIMENT);
+         if command.m_pos != Vector::ZERO {
+            player.set_pos(command.m_pos);
          }
          else {
             player.set_vel(command.m_move_dir);
@@ -59,10 +55,6 @@ impl World {
       }
    }
 
-   // pub fn tick(&mut self, dt: f32) {
-   //    //To Do Create enemies on timer based system
-   // }
-
    pub fn phys(&self) -> &Phys {
       &self.m_phys
    }
@@ -74,6 +66,7 @@ impl World {
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
          pos = player.pos;
 
+         //Keep player position bound to game window
          if pos.x < 0.0 {
             pos.x = 0.0;
          }
@@ -82,8 +75,6 @@ impl World {
             pos.x = 784.0;
          }
 
-         //Keep player position bound to game window
-         //Todo: refactor to find a cleaner way to do this.
          player.set_pos(pos);
       }
       pos

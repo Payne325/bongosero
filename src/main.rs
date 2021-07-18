@@ -14,8 +14,8 @@ mod bongosero_movement;
 mod bongosero_weapon;
 
 use quicksilver::{
-   geom::{Rectangle, Vector},
-   graphics::{Color, Image},
+   geom::Vector,
+   graphics::Image,
    input::Key,
    run, Graphics, Input, Result, Settings, Window,
 };
@@ -32,11 +32,8 @@ fn main() {
 }
 
 async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
-   /*
-    * This function serves as the control loop, on exit the game ends.
-    * Todo: Add a splash screen and menu for options, camera calibration and highscore data. 
-   */
-
+   // This function serves as the control loop, on exit the game ends.
+   
    //Load images 
    let background = Image::load(&gfx, "background.png").await?;
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;

@@ -28,7 +28,7 @@ impl input_device::InputDevice for KeyboardWeapon {
    
       self.m_firing = fire_weapon_down;
 
-      input_device::UserCommand::new_experiment(Vector::ZERO, Vector::ZERO, shoot)
+      input_device::UserCommand::new_velocity_based(Vector::ZERO, shoot)
    }
 
    fn debug_print(&self) {

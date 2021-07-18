@@ -101,7 +101,7 @@ impl input_device::InputDevice for BongoseroMovement {
          Err(_) => { /*println!("ERROR: {}", e);*/ },
       }
 
-      input_device::UserCommand::new_experiment(
+      input_device::UserCommand::new_positional_based(
          Vector::ZERO, 
          Vector::new(self.m_prev_position as f32, 516.0), 
          false)
