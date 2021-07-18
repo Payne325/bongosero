@@ -24,15 +24,18 @@ impl BongoseroMovement {
    pub fn new() -> Self {
 
       //Todo: relative path -> JSON File?
-      let protopath = "D:/Portfolio/f-trak/f-trak-test/static/deploy.prototxt.txt".to_string();
-      let modelpath = "D:/Portfolio/f-trak/f-trak-test/static/model.caffemodel".to_string();
+      let protopath = "D:/Portfolio/bongosero/static/deploy.prototxt.txt".to_string();
+      let modelpath = "D:/Portfolio/bongosero/static/model.caffemodel".to_string();
       let min_confidence = 0.9;
 
       let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
       let (terminate_transmitter, terminate_receiver) = mpsc::channel::<bool>();
    
       thread::spawn(move || {
-         println!("DEBUG: Spawned the face capture thread!");
+         if cfg!(feature = "debug") {
+            println!("DEBUG: Spawned the face capture thread!");
+         }
+
          let mut face_cap = f_trak::FaceCapture::new(bbox_transmitter, 
                                                      terminate_transmitter,
                                                      protopath,
@@ -108,6 +111,8 @@ impl input_device::InputDevice for BongoseroMovement {
    }
 
    fn debug_print(&self) {
+      if cfg!(not(feature = "debug")) { return; }
+
       //Todo: Further f-trak related debug information
       if self.m_terminated {
          println!("f-trak thread was terminated!")
