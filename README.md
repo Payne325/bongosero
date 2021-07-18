@@ -22,3 +22,15 @@ Gamecube Controller input is handled bu the [`gc-adapter`](https://github.com/ja
 
 For Linux based distros, you shouldn't have any problems.
 For Windows you may have to install the necessary driver for `gc-adapter` to detect any devices. The setup documentation for the [`Dolphin Emulator`](https://dolphin-emu.org/docs/guides/how-use-official-gc-controller-adapter-wii-u/#Windows) provides instructions on how to install this.  
+
+## Building
+
+`Bongosero` has two optional features which can be specified at compile time.
+
+`debug` - Prints debug information to standard output while game is executing.
+
+`keyboard` - compiles keyboard controls instead of bongo and face tracking.
+
+```
+cargo run --feature "keyboard debug"
+```
