@@ -71,3 +71,21 @@ TODO SUMMARY:
 - Implement enemies if time permits
 - Implement Music and SFX if time permits
 - Replace bullet image assets with better ones
+
+18-7-2021
+
+Added feature to configure which control system is used for the game at compilation time.
+Added feature to configure whether debug messages are displayed.
+Renamed "debug" control structs to "keyboard". Might consider splitting configuration of control selection further.
+Tidied all warnings.
+
+TODO SUMMARY:
+
+- Use relative file paths for the f-trak files.
+  - Not totally clear how this will work yet, may end up passing via command line.
+- Code clean up => Specifically input device should be split to reflect movement vs weapon device.
+  - They return different instruction types for the player character from poll fn, UserCommand is bulkier than necessary.
+
+- Implement enemies if time permits
+- Implement Music and SFX if time permits
+- Replace bullet image assets with better ones
