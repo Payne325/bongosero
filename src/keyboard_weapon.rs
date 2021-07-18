@@ -2,20 +2,20 @@ use crate::input_device;
 use quicksilver as qs;
 use quicksilver::geom::Vector;
 
-pub struct DebugWeapon {
+pub struct KeyboardWeapon {
    m_firing: bool
 }
 
-impl DebugWeapon {
+impl KeyboardWeapon {
    pub fn new() -> Self { 
-      DebugWeapon {          
+      KeyboardWeapon {          
          m_firing: false,
       }
    }
 }
 
 //Input device to handle player weapons fire, debug device is keyboard
-impl input_device::InputDevice for DebugWeapon {
+impl input_device::InputDevice for KeyboardWeapon {
    fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
       let fire_weapon_down = input.key_down(qs::input::Key::Space);
    

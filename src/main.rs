@@ -1,11 +1,17 @@
 mod game;
 mod input_device;
-mod bongosero_movement;
-mod bongosero_weapon;
-mod debug_weapon;
-mod debug_movement;
 mod world;
 mod phys;
+
+#[cfg(feature = "keyboard")]
+mod keyboard_weapon;
+#[cfg(feature = "keyboard")]
+mod keyboard_movement;
+
+#[cfg(not(feature = "keyboard"))]
+mod bongosero_movement;
+#[cfg(not(feature = "keyboard"))]
+mod bongosero_weapon;
 
 use quicksilver::{
    geom::{Rectangle, Vector},

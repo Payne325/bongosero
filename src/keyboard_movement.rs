@@ -4,21 +4,21 @@ use quicksilver::geom::Vector;
 
 const SPEED : f32 = 400.0;
 
-pub struct DebugMovement {
+pub struct KeyboardMovement {
    m_left : bool,
    m_right : bool
 }
 
-impl DebugMovement{
+impl KeyboardMovement{
    pub fn new() -> Self { 
-      DebugMovement {       
+      KeyboardMovement {       
          m_left : false,
          m_right: false   
       }
    }
 }
 
-impl input_device::InputDevice for DebugMovement {
+impl input_device::InputDevice for KeyboardMovement {
    fn poll(&mut self, input: &qs::Input) -> input_device::UserCommand {
       self.m_left = input.key_down(qs::input::Key::Left);
       self.m_right = input.key_down(qs::input::Key::Right);

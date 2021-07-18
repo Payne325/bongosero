@@ -1,8 +1,15 @@
 use crate::input_device::InputDevice;
-use crate::bongosero_movement;
-use crate::bongosero_weapon;
-use crate::debug_weapon;
-use crate::debug_movement;
+
+#[cfg(feature = "keyboard")]
+use crate::keyboard_weapon::KeyboardWeapon;
+#[cfg(feature = "keyboard")]
+use crate::keyboard_movement::KeyboardMovement;
+
+#[cfg(not(feature = "keyboard"))]
+use crate::bongosero_movement::BongoseroMovement;
+#[cfg(not(feature = "keyboard"))]
+use crate::bongosero_weapon::BongoseroWeapon;
+
 use crate::world;
 use quicksilver as qs;
 use quicksilver::{
@@ -24,20 +31,24 @@ pub struct Game {
 }
 
 impl Game {
+   #[cfg(feature = "keyboard")]
    fn construct_weapon_device() -> Box<dyn InputDevice> {    
-      if cfg!(feature = "keyboard") {
-         return Box::new(debug_weapon::DebugWeapon::new());
-      }
-
-      Box::new(bongosero_weapon::BongoseroWeapon::new())
+      Box::new(KeyboardWeapon::new())
+   }
+   
+   #[cfg(feature = "keyboard")]
+   fn construct_move_device() -> Box<dyn InputDevice> {   
+      Box::new(KeyboardMovement::new())
    }
 
-   fn construct_move_device() -> Box<dyn InputDevice> {   
-      if cfg!(feature = "keyboard") {
-         return Box::new(debug_movement::DebugMovement::new());
-      }
+   #[cfg(not(feature = "keyboard"))]
+   fn construct_weapon_device() -> Box<dyn InputDevice> {    
+      Box::new(BongoseroWeapon::new())
+   }
 
-      Box::new(bongosero_movement::BongoseroMovement::new())
+   #[cfg(not(feature = "keyboard"))]
+   fn construct_move_device() -> Box<dyn InputDevice> {   
+      Box::new(BongoseroMovement::new())
    }
 
    pub fn new(background: Image, player: Image, bullet: Image) -> qs::Result<Self> {
@@ -66,7 +77,7 @@ impl Game {
          self.m_move_device.debug_print();
          self.m_weapon_device.debug_print();
       }
-      
+
       self.m_world.maintain(user_commands);
    }
 
