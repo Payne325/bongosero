@@ -27,6 +27,7 @@ For Windows you may have to install the necessary driver for `gc-adapter` to det
 `Bongosero` has two optional features which can be specified at compile time.
 
 `debug` - Prints debug information to standard output while game is executing.
+
 `keyboard` - compiles keyboard controls instead of bongo and face tracking.
 
 ```
