@@ -23,9 +23,8 @@ pub struct BongoseroMovement {
 impl BongoseroMovement {
    pub fn new() -> Self {
 
-      //Todo: relative path -> JSON File?
-      let protopath = "D:/Portfolio/bongosero/static/deploy.prototxt.txt".to_string();
-      let modelpath = "D:/Portfolio/bongosero/static/model.caffemodel".to_string();
+      let protopath = "./deploy.prototxt.txt".to_string();
+      let modelpath = "./model.caffemodel".to_string();
       let min_confidence = 0.9;
 
       let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
