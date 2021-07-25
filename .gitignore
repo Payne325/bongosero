@@ -1,4 +1,5 @@
 /target
+/dev_diary
 **/*.rs.bk
 .vscode
 *.gif
