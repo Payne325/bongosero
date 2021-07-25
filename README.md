@@ -6,7 +6,7 @@ I began developing this as a way of pracising developing with the Rust Programmi
 
 The game can be controlled with a keyboard for debugging purposes, but the intended use is to control the game using the official Nintendo Gamecube adapter for Wii U, official Nintendo Donkey Konga Bongo controller and a webcam.
 
-I created some of the pixel art myself using <a href="https://www.piskelapp.com/">Piskel</a>.
+I created the character and bullet sprites myself using <a href="https://www.piskelapp.com/">Piskel</a>.
 
 In case you were wondering, someone who plays the bongos is called a bongosero (well that's what google told me anyway ;) ).
 
@@ -30,5 +30,5 @@ For Windows you may have to install the necessary driver for `gc-adapter` to det
 `keyboard` - compiles keyboard controls instead of bongo and face tracking.
 
 ```
-cargo run --feature "keyboard debug"
+cargo run --features "keyboard debug"
 ```
