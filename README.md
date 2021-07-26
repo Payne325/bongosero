@@ -16,6 +16,20 @@ The game is expected to be built with cargo, but there are a couple of additiona
 ### Face tracking for player movement
 Face tracking is handled by the [`f-trak`](https://github.com/Payne325/f-trak) crate, which relies on the [`opencv-rust`](https://github.com/twistedfall/opencv-rust) crate. Please follow the set up procedure for `opencv-rust` in its documentation.
 
+Using Windows, I installed opencv 4.5.3 via chocolatey and set the following environment variables.
+
+`OPENCV_DIR` `"$ChocolateyToolsLocation\opencv\build\x64\vc15\lib"`
+
+`OPENCV_INCLUDE_PATHS` `"$ChocolateyToolsLocation\opencv\build\include"`
+
+`OPENCV_LINK_PATHS` `"$ChocolateyToolsLocation\opencv\build\x64\vc15\lib"`
+
+`OPENCV_LINK_LIBS` `"opencv_world412"`
+
+`Path` `"$ChocolateyToolsLocation\opencv\build\x64\vc15\bin"`
+
+If you compile for Linux/Mac, I kindly ask you to document the steps taken and raise a PR to have them added for future reference. 
+
 ### Handling the Gamecube controller input
 Gamecube Controller input is handled by the [`gc-adapter`](https://github.com/jam1garner/gc-adapter) crate, which creates a libusb interface to the official Nintendo Gamecube Adapter for Wii U. I believe it should also work with the Mayflash adapter but this is untested.
 
