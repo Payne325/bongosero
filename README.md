@@ -28,6 +28,8 @@ Using Windows, I installed opencv 4.5.3 via chocolatey and set the following env
 
 `Path` `"$ChocolateyToolsLocation\opencv\build\x64\vc15\bin"`
 
+You'll also need to install llvm, the [`opencv-rust`](https://github.com/twistedfall/opencv-rust#windows-package) crate readme documentation explains further.
+
 If you compile for Linux/Mac, I kindly ask you to document the steps taken and raise a PR to have them added for future reference. 
 
 ### Handling the Gamecube controller input
