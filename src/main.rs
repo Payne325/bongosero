@@ -2,6 +2,7 @@ mod game;
 mod input_device;
 mod world;
 mod phys;
+mod enemy_factory;
 
 #[cfg(feature = "keyboard")]
 mod keyboard_weapon;

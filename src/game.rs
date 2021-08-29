@@ -18,7 +18,6 @@ use quicksilver::{
    Input, 
    Graphics
 };
-use std::collections::VecDeque;
 
 pub struct Game {
    m_weapon_device: Box<dyn InputDevice>,
@@ -108,10 +107,11 @@ impl Game {
          gfx.draw_image(&self.m_bullet_sprite, region);
       }
 
-      // enemy example on screen
-      let enemy_region = Rectangle::new(Vector::new(336.0, 186.0), self.m_enemy_sprite.size());
-      gfx.draw_image(&self.m_enemy_sprite, enemy_region);
-
+      for e in self.m_world.enemies() {
+         let region = Rectangle::new(e, self.m_enemy_sprite.size());
+         gfx.draw_image(&self.m_enemy_sprite, region);
+      }
+      
       if !self.m_game_has_begun {
          let region = Rectangle::new(Vector::new(254.0, 243.0), self.m_start_msg.size());
          gfx.draw_image(&self.m_start_msg, region);

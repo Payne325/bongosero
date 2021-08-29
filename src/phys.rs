@@ -93,10 +93,6 @@ impl Phys {
       self.bodies.get(&id).map(|b| b.borrow_mut())
    }
 
-   pub fn bodies(&self) -> impl Iterator<Item = Ref<Body>> {
-      self.bodies.values().map(|b| b.borrow())
-   }
-
    pub fn bodies_mut(&self) -> impl Iterator<Item = RefMut<Body>> {
       self.bodies.values().map(|b| b.borrow_mut())
    }
