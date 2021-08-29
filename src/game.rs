@@ -27,7 +27,8 @@ pub struct Game {
    m_background: Image,
    m_player_sprite: Image,
    m_bullet_sprite: Image,
-   m_background_region: Rectangle
+   m_background_region: Rectangle,
+   m_game_has_begun : bool
 }
 
 impl Game {
@@ -65,13 +66,22 @@ impl Game {
          m_background: background,
          m_player_sprite: player,
          m_bullet_sprite: bullet,
-         m_background_region: background_region
+         m_background_region: background_region,
+         m_game_has_begun: false
       })
    }
 
    pub fn update(&mut self, input: &Input) {
       let mut user_commands = self.m_move_device.poll(input);
       user_commands.m_fire_bullet = self.m_weapon_device.poll(input).m_fire_bullet;
+
+      if !self.m_game_has_begun {
+         if user_commands.m_fire_bullet {
+            self.m_game_has_begun = true;
+         }
+         
+         return;
+      }
 
       if cfg!(feature = "debug") {
          self.m_move_device.debug_print();
