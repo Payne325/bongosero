@@ -1,10 +1,13 @@
 use crate::phys::Phys;
 use crate::input_device::UserCommand;
+//use crate::enemy_factory::EnemyFactory;
 use quicksilver::geom::Vector;
+use std::collections::VecDeque;
 
 pub struct World {
    m_phys: Phys,
    m_player: u64,
+   m_bullets: VecDeque<u64>
 }
 
 impl World {
@@ -24,6 +27,7 @@ impl World {
          Self {
             m_phys: phys,
             m_player: player,
+            m_bullets: VecDeque::new()
          }
    }
 
@@ -39,19 +43,20 @@ impl World {
          }
       }
 
-      self.m_phys.tick(1.0/60.0);
+      self.m_phys.tick(1.0/60.0); // estimating 60 fps
 
       let bullet_speed = 1000.0;
 
       if command.m_fire_bullet {
          let player_pos = self.get_player_position();
 
-         self.m_phys
-            .create_body()
-            .set_pos(player_pos + Vector::new(16.0, -16.0)) //x coord = player.x + bullet height
-            .set_vel(Vector::new(0.0, -bullet_speed))
-            .set_radius(16.0)
-            .set_mass(1.0);
+         self.m_bullets.push_back(self.m_phys
+                                    .create_body()
+                                    .set_pos(player_pos + Vector::new(16.0, -16.0)) //x coord = player.x + bullet height
+                                    .set_vel(Vector::new(0.0, -bullet_speed))
+                                    .set_radius(16.0)
+                                    .set_mass(1.0)
+                                    .id);
       }
    }
 
@@ -78,5 +83,20 @@ impl World {
          player.set_pos(pos);
       }
       pos
+   }
+
+   pub fn bullets(&self) -> VecDeque<Vector> {
+      let mut positions: VecDeque<Vector> = VecDeque::new();
+
+      for bullet_id in &self.m_bullets {
+         let body_optional = self.m_phys.get_body(*bullet_id);
+
+         match body_optional {
+            Some(b) => positions.push_back(b.pos),
+            None => {}
+         }         
+      }
+
+      positions
    }
 }

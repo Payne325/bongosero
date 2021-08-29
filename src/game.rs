@@ -103,9 +103,7 @@ impl Game {
       let player_region = Rectangle::new(self.m_world.get_player_position(), self.m_player_sprite.size());
       gfx.draw_image(&self.m_player_sprite, player_region);
 
-      let bullets = self.bullets();
-
-      for b in bullets {
+      for b in self.m_world.bullets() {
          let region = Rectangle::new(b, self.m_bullet_sprite.size());
          gfx.draw_image(&self.m_bullet_sprite, region);
       }
@@ -119,19 +117,5 @@ impl Game {
          gfx.draw_image(&self.m_start_msg, region);
       }
       gfx
-   }
-
-   fn bullets(&self) -> VecDeque<Vector> {
-      let bodies = self.m_world.phys().bodies();
-
-      let mut positions: VecDeque<Vector> = VecDeque::new();
-
-      for body in bodies {
-         if !body.is_player{
-            positions.push_back(body.pos);
-         }
-      }
-
-      positions
    }
 }
