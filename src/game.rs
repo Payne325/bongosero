@@ -27,7 +27,9 @@ pub struct Game {
    m_background: Image,
    m_player_sprite: Image,
    m_bullet_sprite: Image,
-   m_background_region: Rectangle
+   m_start_msg: Image,
+   m_background_region: Rectangle,
+   m_game_has_begun : bool
 }
 
 impl Game {
@@ -51,7 +53,7 @@ impl Game {
       Box::new(BongoseroMovement::new())
    }
 
-   pub fn new(background: Image, player: Image, bullet: Image) -> qs::Result<Self> {
+   pub fn new(background: Image, player: Image, bullet: Image, start_msg: Image) -> qs::Result<Self> {
       let weapon_device = Game::construct_weapon_device();
       let move_device = Game::construct_move_device();
       let world = world::World::new();
@@ -65,13 +67,23 @@ impl Game {
          m_background: background,
          m_player_sprite: player,
          m_bullet_sprite: bullet,
-         m_background_region: background_region
+         m_start_msg: start_msg,
+         m_background_region: background_region,
+         m_game_has_begun: false
       })
    }
 
    pub fn update(&mut self, input: &Input) {
       let mut user_commands = self.m_move_device.poll(input);
       user_commands.m_fire_bullet = self.m_weapon_device.poll(input).m_fire_bullet;
+
+      if !self.m_game_has_begun {
+         if user_commands.m_fire_bullet {
+            self.m_game_has_begun = true;
+         }
+         
+         return;
+      }
 
       if cfg!(feature = "debug") {
          self.m_move_device.debug_print();
@@ -96,6 +108,10 @@ impl Game {
          gfx.draw_image(&self.m_bullet_sprite, region);
       }
 
+      if !self.m_game_has_begun {
+         let region = Rectangle::new(Vector::new(254.0, 243.0), self.m_start_msg.size());
+         gfx.draw_image(&self.m_start_msg, region);
+      }
       gfx
    }
 
