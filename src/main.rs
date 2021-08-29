@@ -39,9 +39,10 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;
    let bullet_sprite = Image::load(&gfx, "bullet.png").await?;
    let start_msg = Image::load(&gfx, "start_msg.png").await?;
+   let enemy_sprite = Image::load(&gfx, "enemy.png").await?;
 
    //Construct object to handle main game functionality.
-   let mut game = game::Game::new(background, player_sprite, bullet_sprite, start_msg).unwrap();
+   let mut game = game::Game::new(background, player_sprite, bullet_sprite, start_msg, enemy_sprite).unwrap();
 
    println!("Game manager initialised...\n");
 
