@@ -109,4 +109,8 @@ impl Phys {
          body.step(dt);
       }
    }
+
+   pub fn delete_body(&mut self, id: u64) -> bool {
+      self.bodies.remove(&id).is_some()
+  }
 }

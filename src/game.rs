@@ -102,12 +102,12 @@ impl Game {
       let player_region = Rectangle::new(self.m_world.get_player_position(), self.m_player_sprite.size());
       gfx.draw_image(&self.m_player_sprite, player_region);
 
-      for b in self.m_world.bullets() {
+      for b in self.m_world.bullet_positions() {
          let region = Rectangle::new(b, self.m_bullet_sprite.size());
          gfx.draw_image(&self.m_bullet_sprite, region);
       }
 
-      for e in self.m_world.enemies() {
+      for e in self.m_world.enemy_positions() {
          let region = Rectangle::new(e, self.m_enemy_sprite.size());
          gfx.draw_image(&self.m_enemy_sprite, region);
       }

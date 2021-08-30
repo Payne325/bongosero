@@ -47,6 +47,11 @@ impl World {
 
       self.m_phys.tick(1.0/60.0); // estimating 60 fps
 
+      //remove out of bounds items
+      self.handle_bullets_out_of_bounds();
+      self.handle_enemies_out_of_bounds();
+
+      // Spawn new physics bodies
       self.m_enemy_factory.tick(&mut self.m_phys);
 
       let bullet_speed = 1000.0;
@@ -62,6 +67,9 @@ impl World {
                                     .set_mass(1.0)
                                     .id);
       }
+
+      //handle any collisions
+      self.collision_detection();
    }
    
    pub fn get_player_position(&mut self) -> Vector {
@@ -85,7 +93,7 @@ impl World {
       pos
    }
 
-   pub fn bullets(&self) -> VecDeque<Vector> {
+   pub fn bullet_positions(&self) -> VecDeque<Vector> {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
       for bullet_id in &self.m_bullets {
@@ -100,11 +108,11 @@ impl World {
       positions
    }
 
-   pub fn enemies(&self) -> VecDeque<Vector> {
+   pub fn enemy_positions(&self) -> VecDeque<Vector> {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
-      for bullet_id in &self.m_enemy_factory.positions() {
-         let body_optional = self.m_phys.get_body(*bullet_id);
+      for enemy_id in &self.m_enemy_factory.positions() {
+         let body_optional = self.m_phys.get_body(*enemy_id);
 
          match body_optional {
             Some(b) => positions.push_back(b.pos),
@@ -113,5 +121,99 @@ impl World {
       }
 
       positions
+   }
+
+   fn collision_detection(&mut self) {
+      //hard coded sprite sizes
+      //bullets 32x32
+      //enemies 64x64
+      //player 64x64
+
+      let mut to_remove: VecDeque<u64> = VecDeque::new();
+
+      // check for collisions between enemies and other bodies
+      for enemy_id in &self.m_enemy_factory.positions() {
+         let enemy_optional = self.m_phys.get_body(*enemy_id);
+
+         match enemy_optional {
+            Some(enemy) => {
+
+               for bullet_id in &self.m_bullets {
+
+                  let collision_with_bullet_radius = 48.0; // half bullet size + half enemy size
+                  let bullet = self.m_phys.get_body(*bullet_id).unwrap();
+                  let distance = ((bullet.pos.x - enemy.pos.x) * (bullet.pos.x - enemy.pos.x)) + ((bullet.pos.y - enemy.pos.y) * (bullet.pos.y - enemy.pos.y));
+
+                  if distance.sqrt() < collision_with_bullet_radius {
+                     to_remove.push_back(*enemy_id);
+                     to_remove.push_back(*bullet_id);
+                  }
+               }
+
+               let collision_with_player_radius = 64.0; // half player size + half enemy size
+               let player = self.m_phys.get_body(self.m_player).unwrap();
+
+               let distance = ((player.pos.x - enemy.pos.x) * (player.pos.x - enemy.pos.x)) + ((player.pos.y - enemy.pos.y) * (player.pos.y - enemy.pos.y));
+
+               if distance.sqrt() < collision_with_player_radius {
+                  to_remove.push_back(self.m_player);
+               }
+            },
+            None => {}
+         }  
+      }
+
+      for id in to_remove {
+         self.m_phys.delete_body(id);
+      }
+   }
+
+   fn handle_bullets_out_of_bounds(&mut self) {
+
+      let mut to_remove: VecDeque<u64> = VecDeque::new();
+
+      for bullet_id in &self.m_bullets {
+         let body_optional = self.m_phys.get_body(*bullet_id);
+
+         match body_optional {
+            Some(b) => {
+               if b.pos.y < 16.0 {
+                  to_remove.push_back(*bullet_id);
+               }
+            },
+            None => {}
+         }         
+      }
+
+      for id in to_remove {
+
+         self.m_phys.delete_body(id);
+      }
+
+      ()
+   }
+
+   fn handle_enemies_out_of_bounds(&mut self) {
+
+      let mut to_remove: VecDeque<u64> = VecDeque::new();
+
+      for enemy_id in &self.m_enemy_factory.positions() {
+         let body_optional = self.m_phys.get_body(*enemy_id);
+
+         match body_optional {
+            Some(b) => {
+               if b.pos.y > 532.0 {
+                  to_remove.push_back(*enemy_id);
+               }
+            },
+            None => {}
+         }         
+      }
+
+      for id in to_remove {
+         self.m_phys.delete_body(id);
+      }
+
+      ()
    }
 }
