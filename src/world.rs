@@ -1,4 +1,4 @@
-use crate::phys::Phys;
+use crate::phys::{Phys, Body};
 use crate::input_device::UserCommand;
 use crate::enemy_factory::EnemyFactory;
 use quicksilver::geom::Vector;
@@ -130,6 +130,18 @@ impl World {
       //player 64x64
 
       let mut to_remove: VecDeque<u64> = VecDeque::new();
+      let mut handle_enemy_other_collision = |enemy_id: u64, enemy: &std::cell::Ref<Body>, other_id: u64, other_optional: Option<std::cell::Ref<Body>>, detection_range: f32| {
+         match other_optional {
+            Some(other) => {
+               let distance = ((other.pos.x - enemy.pos.x) * (other.pos.x - enemy.pos.x)) + ((other.pos.y - enemy.pos.y) * (other.pos.y - enemy.pos.y));
+               if distance.sqrt() < detection_range {
+                  to_remove.push_back(enemy_id);
+                  to_remove.push_back(other_id);
+               }
+            },
+            None => {}
+         }
+      };
 
       // check for collisions between enemies and other bodies
       for enemy_id in &self.m_enemy_factory.positions() {
@@ -139,25 +151,12 @@ impl World {
             Some(enemy) => {
 
                for bullet_id in &self.m_bullets {
-
-                  let collision_with_bullet_radius = 48.0; // half bullet size + half enemy size
-                  let bullet = self.m_phys.get_body(*bullet_id).unwrap();
-                  let distance = ((bullet.pos.x - enemy.pos.x) * (bullet.pos.x - enemy.pos.x)) + ((bullet.pos.y - enemy.pos.y) * (bullet.pos.y - enemy.pos.y));
-
-                  if distance.sqrt() < collision_with_bullet_radius {
-                     to_remove.push_back(*enemy_id);
-                     to_remove.push_back(*bullet_id);
-                  }
+                  let detection_range = 48.0; // half bullet size + half enemy size
+                  handle_enemy_other_collision(*enemy_id, &enemy, *bullet_id, self.m_phys.get_body(*bullet_id), detection_range);
                }
 
-               let collision_with_player_radius = 64.0; // half player size + half enemy size
-               let player = self.m_phys.get_body(self.m_player).unwrap();
-
-               let distance = ((player.pos.x - enemy.pos.x) * (player.pos.x - enemy.pos.x)) + ((player.pos.y - enemy.pos.y) * (player.pos.y - enemy.pos.y));
-
-               if distance.sqrt() < collision_with_player_radius {
-                  to_remove.push_back(self.m_player);
-               }
+               let detection_range = 64.0; // half player size + half enemy size
+               handle_enemy_other_collision(*enemy_id, &enemy, self.m_player, self.m_phys.get_body(self.m_player), detection_range);
             },
             None => {}
          }  
