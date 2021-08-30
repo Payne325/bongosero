@@ -5,14 +5,14 @@ use std::collections::VecDeque;
 
 pub struct EnemyFactory {
    m_difficulty: f32,
-   m_positions: VecDeque<u64>
+   m_refs: VecDeque<u64>
 }
 
 impl EnemyFactory {
    pub fn new() -> EnemyFactory{
       EnemyFactory {
          m_difficulty: 0.0,
-         m_positions: VecDeque::new()
+         m_refs: VecDeque::new()
       }
    }
 
@@ -32,11 +32,15 @@ impl EnemyFactory {
             .set_mass(1.0)
             .id;
 
-            self.m_positions.push_back(enemy);
+            self.m_refs.push_back(enemy);
       }
    }
 
-   pub fn positions(&self) -> VecDeque<u64> {
-      self.m_positions.clone()
+   pub fn existing_enemy_ids(&self) -> VecDeque<u64> {
+      self.m_refs.clone()
+   }
+
+   pub fn remove(&mut self, index: usize) {
+      self.m_refs.remove(index);
    }
 }

@@ -70,6 +70,8 @@ impl World {
 
       //handle any collisions
       self.collision_detection();
+
+      self.clean_up_HACK();
    }
    
    pub fn get_player_position(&mut self) -> Vector {
@@ -111,7 +113,7 @@ impl World {
    pub fn enemy_positions(&self) -> VecDeque<Vector> {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
-      for enemy_id in &self.m_enemy_factory.positions() {
+      for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
          let body_optional = self.m_phys.get_body(*enemy_id);
 
          match body_optional {
@@ -144,7 +146,7 @@ impl World {
       };
 
       // check for collisions between enemies and other bodies
-      for enemy_id in &self.m_enemy_factory.positions() {
+      for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
          let enemy_optional = self.m_phys.get_body(*enemy_id);
 
          match enemy_optional {
@@ -196,7 +198,7 @@ impl World {
 
       let mut to_remove: VecDeque<u64> = VecDeque::new();
 
-      for enemy_id in &self.m_enemy_factory.positions() {
+      for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
          let body_optional = self.m_phys.get_body(*enemy_id);
 
          match body_optional {
@@ -214,5 +216,49 @@ impl World {
       }
 
       ()
+   }
+
+   fn clean_up_HACK(&mut self) {
+      //remove dangling references
+      // nb: Enemy factory and world hold references to enemy and bullet bodies
+      // collision detection and OOB checks remove the bodies but don't clear the reference
+      // todo: refactor to ensure references are removed when bodies destroyed.
+      
+      let mut bullets_to_remove: VecDeque<usize> = VecDeque::new();
+
+      for i in 0..self.m_bullets.len() {
+
+         let bullet_id = self.m_bullets[i];
+         let body = self.m_phys.get_body(bullet_id);
+
+         match body {
+            Some(_) => {}, 
+            None => { bullets_to_remove.push_back(i) }
+         }
+      }
+
+      //Go in reverse order to preserve indices
+      for b in bullets_to_remove.iter().rev() {
+         self.m_bullets.remove(*b);
+      }
+
+      let mut enemies_to_remove: VecDeque<usize> = VecDeque::new();
+      let enemies = self.m_enemy_factory.existing_enemy_ids();
+      for i in 0..enemies.len() {
+
+
+         let enemy_id = enemies[i];
+         let body = self.m_phys.get_body(enemy_id);
+
+         match body {
+            Some(_) => {}, 
+            None => { enemies_to_remove.push_back(i) }
+         }
+      }
+
+      //Go in reverse order to preserve indices
+      for b in enemies_to_remove.iter().rev() {
+         self.m_enemy_factory.remove(*b);
+      }
    }
 }
