@@ -7,8 +7,9 @@ use std::collections::VecDeque;
 pub struct World {
    m_phys: Phys,
    m_player: u64,
-   m_bullets: VecDeque<u64>,
-   m_enemy_factory: EnemyFactory
+   m_existing_bullets: VecDeque<u64>,
+   m_enemy_factory: EnemyFactory,
+   m_game_over: bool
 }
 
 impl World {
@@ -28,12 +29,17 @@ impl World {
          Self {
             m_phys: phys,
             m_player: player,
-            m_bullets: VecDeque::new(),
-            m_enemy_factory: EnemyFactory::new()
+            m_existing_bullets: VecDeque::new(),
+            m_enemy_factory: EnemyFactory::new(),
+            m_game_over: false
          }
    }
 
    pub fn maintain(&mut self, command: UserCommand) {
+      if self.m_game_over {
+         return;
+      }
+
       {
          let mut player = self.m_phys.get_body_mut(self.m_player).unwrap();
 
@@ -60,7 +66,7 @@ impl World {
       if command.m_fire_bullet {
          let player_pos = self.get_player_position();
 
-         self.m_bullets.push_back(self.m_phys
+         self.m_existing_bullets.push_back(self.m_phys
                                     .create_body()
                                     .set_pos(player_pos + Vector::new(16.0, -16.0)) //x coord = player.x + bullet height
                                     .set_vel(Vector::new(0.0, -bullet_speed))
@@ -99,7 +105,7 @@ impl World {
    pub fn bullet_positions(&self) -> VecDeque<Vector> {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
-      for bullet_id in &self.m_bullets {
+      for bullet_id in &self.m_existing_bullets {
          let body_optional = self.m_phys.get_body(*bullet_id);
 
          match body_optional {
@@ -126,6 +132,10 @@ impl World {
       positions
    }
 
+   pub fn game_over(&self) -> bool {
+      self.m_game_over
+   }
+
    fn collision_detection(&mut self) {
       //hard coded sprite sizes
       //bullets 32x32
@@ -133,16 +143,19 @@ impl World {
       //player 64x64
 
       let mut to_remove: VecDeque<u64> = VecDeque::new();
-      let mut handle_enemy_other_collision = |enemy_id: u64, enemy: &std::cell::Ref<Body>, other_id: u64, other_optional: Option<std::cell::Ref<Body>>, detection_range: f32| {
+      let mut handle_enemy_other_collision = |enemy_id: u64, enemy: &std::cell::Ref<Body>, other_id: u64, other_optional: Option<std::cell::Ref<Body>>, detection_range: f32| -> bool {
          match other_optional {
             Some(other) => {
-               let distance = ((other.pos.x - enemy.pos.x) * (other.pos.x - enemy.pos.x)) + ((other.pos.y - enemy.pos.y) * (other.pos.y - enemy.pos.y));
+               let distance = (other.pos.x - enemy.pos.x).powf(2.0) + (other.pos.y - enemy.pos.y).powf(2.0);
                if distance.sqrt() < detection_range {
                   to_remove.push_back(enemy_id);
                   to_remove.push_back(other_id);
+                  return true;
                }
+
+               return false;
             },
-            None => {}
+            None => { return false; }
          }
       };
 
@@ -153,13 +166,16 @@ impl World {
          match enemy_optional {
             Some(enemy) => {
 
-               for bullet_id in &self.m_bullets {
+               for bullet_id in &self.m_existing_bullets {
                   let detection_range = 48.0; // half bullet size + half enemy size
-                  handle_enemy_other_collision(*enemy_id, &enemy, *bullet_id, self.m_phys.get_body(*bullet_id), detection_range);
+                  let _ = handle_enemy_other_collision(*enemy_id, &enemy, *bullet_id, self.m_phys.get_body(*bullet_id), detection_range);
                }
 
                let detection_range = 64.0; // half player size + half enemy size
-               handle_enemy_other_collision(*enemy_id, &enemy, self.m_player, self.m_phys.get_body(self.m_player), detection_range);
+               let player_hit = handle_enemy_other_collision(*enemy_id, &enemy, self.m_player, self.m_phys.get_body(self.m_player), detection_range);
+               if player_hit {
+                  self.m_game_over = true;
+               }
             },
             None => {}
          }  
@@ -174,7 +190,7 @@ impl World {
 
       let mut to_remove: VecDeque<u64> = VecDeque::new();
 
-      for bullet_id in &self.m_bullets {
+      for bullet_id in &self.m_existing_bullets {
          let body_optional = self.m_phys.get_body(*bullet_id);
 
          match body_optional {
@@ -206,6 +222,9 @@ impl World {
             Some(b) => {
                if b.pos.y > 532.0 {
                   to_remove.push_back(*enemy_id);
+
+                  //Enemy reached the bottom, game ends
+                  self.m_game_over = true;
                }
             },
             None => {}
@@ -227,9 +246,9 @@ impl World {
       
       let mut bullets_to_remove: VecDeque<usize> = VecDeque::new();
 
-      for i in 0..self.m_bullets.len() {
+      for i in 0..self.m_existing_bullets.len() {
 
-         let bullet_id = self.m_bullets[i];
+         let bullet_id = self.m_existing_bullets[i];
          let body = self.m_phys.get_body(bullet_id);
 
          match body {
@@ -240,7 +259,7 @@ impl World {
 
       //Go in reverse order to preserve indices
       for b in bullets_to_remove.iter().rev() {
-         self.m_bullets.remove(*b);
+         self.m_existing_bullets.remove(*b);
       }
 
       let mut enemies_to_remove: VecDeque<usize> = VecDeque::new();

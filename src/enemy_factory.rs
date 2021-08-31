@@ -35,11 +35,13 @@ impl EnemyFactory {
          let x_pos = rng.gen_range(32.0, 768.0);
          let y_vel = MIN_ENEMY_SPEED * self.m_difficulty as f32;
 
-         println!("LEVEL: {}, TIMER: {}", self.m_difficulty, self.m_timer);
+         if cfg!(feature = "debug") {
+            println!("ENEMY_FACTORY: {{ LEVEL: {}, TIMER: {} }}", self.m_difficulty, self.m_timer);
+         }
 
          let enemy = phys
             .create_body()
-            .set_pos(Vector::new(x_pos, 10.0)) //x coord needs to be random
+            .set_pos(Vector::new(x_pos, 10.0))
             .set_vel(Vector::new(0.0, y_vel))
             .set_radius(64.0)
             .set_mass(1.0)
