@@ -45,14 +45,15 @@ impl World {
          }
       }
 
-      self.m_phys.tick(1.0/60.0); // estimating 60 fps
+      let tick = 1.0/60.0; // estimated delta assuming 60 fps
+      self.m_phys.tick(tick); 
 
       //remove out of bounds items
       self.handle_bullets_out_of_bounds();
       self.handle_enemies_out_of_bounds();
 
       // Spawn new physics bodies
-      self.m_enemy_factory.tick(&mut self.m_phys);
+      self.m_enemy_factory.tick(&mut self.m_phys, tick);
 
       let bullet_speed = 1000.0;
 
