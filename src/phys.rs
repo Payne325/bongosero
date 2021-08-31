@@ -85,12 +85,12 @@ impl Phys {
          .borrow_mut()
    }
 
-   pub fn get_body_mut(&mut self, id: u64) -> Option<RefMut<Body>> {
-      self.bodies.get(&id).map(|b| b.borrow_mut())
+   pub fn get_body(&self, id: u64) -> Option<Ref<Body>> {
+      self.bodies.get(&id).map(|b| b.borrow())
    }
 
-   pub fn bodies(&self) -> impl Iterator<Item = Ref<Body>> {
-      self.bodies.values().map(|b| b.borrow())
+   pub fn get_body_mut(&mut self, id: u64) -> Option<RefMut<Body>> {
+      self.bodies.get(&id).map(|b| b.borrow_mut())
    }
 
    pub fn bodies_mut(&self) -> impl Iterator<Item = RefMut<Body>> {
@@ -109,4 +109,8 @@ impl Phys {
          body.step(dt);
       }
    }
+
+   pub fn delete_body(&mut self, id: u64) -> bool {
+      self.bodies.remove(&id).is_some()
+  }
 }

@@ -2,6 +2,7 @@ mod game;
 mod input_device;
 mod world;
 mod phys;
+mod enemy_factory;
 
 #[cfg(feature = "keyboard")]
 mod keyboard_weapon;
@@ -39,9 +40,11 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;
    let bullet_sprite = Image::load(&gfx, "bullet.png").await?;
    let start_msg = Image::load(&gfx, "start_msg.png").await?;
+   let enemy_sprite = Image::load(&gfx, "enemy.png").await?;
+   let end_msg = Image::load(&gfx, "end_msg.png").await?;
 
    //Construct object to handle main game functionality.
-   let mut game = game::Game::new(background, player_sprite, bullet_sprite, start_msg).unwrap();
+   let mut game = game::Game::new(background, player_sprite, bullet_sprite, start_msg, enemy_sprite, end_msg).unwrap();
 
    println!("Game manager initialised...\n");
 

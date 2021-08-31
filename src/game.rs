@@ -18,7 +18,6 @@ use quicksilver::{
    Input, 
    Graphics
 };
-use std::collections::VecDeque;
 
 pub struct Game {
    m_weapon_device: Box<dyn InputDevice>,
@@ -28,8 +27,10 @@ pub struct Game {
    m_player_sprite: Image,
    m_bullet_sprite: Image,
    m_start_msg: Image,
+   m_enemy_sprite: Image,
    m_background_region: Rectangle,
-   m_game_has_begun : bool
+   m_game_has_begun : bool,
+   m_end_msg: Image,
 }
 
 impl Game {
@@ -53,7 +54,7 @@ impl Game {
       Box::new(BongoseroMovement::new())
    }
 
-   pub fn new(background: Image, player: Image, bullet: Image, start_msg: Image) -> qs::Result<Self> {
+   pub fn new(background: Image, player: Image, bullet: Image, start_msg: Image, enemy: Image, end_msg: Image) -> qs::Result<Self> {
       let weapon_device = Game::construct_weapon_device();
       let move_device = Game::construct_move_device();
       let world = world::World::new();
@@ -68,8 +69,10 @@ impl Game {
          m_player_sprite: player,
          m_bullet_sprite: bullet,
          m_start_msg: start_msg,
+         m_enemy_sprite: enemy,
          m_background_region: background_region,
-         m_game_has_begun: false
+         m_game_has_begun: false,
+         m_end_msg: end_msg
       })
    }
 
@@ -98,34 +101,30 @@ impl Game {
 
       gfx.draw_image(&self.m_background, self.m_background_region);
 
-      let player_region = Rectangle::new(self.m_world.get_player_position(), self.m_player_sprite.size());
-      gfx.draw_image(&self.m_player_sprite, player_region);
-
-      let bullets = self.bullets();
-
-      for b in bullets {
+      if !self.m_world.game_over() && self.m_game_has_begun {
+        let player_region = Rectangle::new(self.m_world.get_player_position(), self.m_player_sprite.size());
+        gfx.draw_image(&self.m_player_sprite, player_region);
+      }
+      
+      for b in self.m_world.bullet_positions() {
          let region = Rectangle::new(b, self.m_bullet_sprite.size());
          gfx.draw_image(&self.m_bullet_sprite, region);
       }
 
+      for e in self.m_world.enemy_positions() {
+         let region = Rectangle::new(e, self.m_enemy_sprite.size());
+         gfx.draw_image(&self.m_enemy_sprite, region);
+      }
+      
       if !self.m_game_has_begun {
          let region = Rectangle::new(Vector::new(254.0, 243.0), self.m_start_msg.size());
          gfx.draw_image(&self.m_start_msg, region);
       }
-      gfx
-   }
 
-   fn bullets(&self) -> VecDeque<Vector> {
-      let bodies = self.m_world.phys().bodies();
-
-      let mut positions: VecDeque<Vector> = VecDeque::new();
-
-      for body in bodies {
-         if !body.is_player{
-            positions.push_back(body.pos);
-         }
+      if self.m_world.game_over() {
+         let region = Rectangle::new(Vector::new(254.0, 243.0), self.m_end_msg.size());
+         gfx.draw_image(&self.m_end_msg, region);
       }
-
-      positions
+      gfx
    }
 }
