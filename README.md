@@ -2,7 +2,7 @@
 
 A proof of concept for a space-invaders style game with face tracking for character movement and support for Gamecube Donkey Konga Bongos to fire the gun.
 
-I began developing this as a way of pracising developing with the Rust Programming Language. As such there could be neater, more idiomatic ways of writing the code found here. If you have any suggestions please feel free to raise an issue.
+I began developing this as a way of practising developing with the Rust Programming Language. As such there could be neater, more idiomatic ways of writing the code found here. If you have any suggestions please feel free to raise an issue.
 
 The game can be controlled with a keyboard for debugging purposes, but the intended use is to control the game using the official Nintendo Gamecube adapter for Wii U, official Nintendo Donkey Konga Bongo controller and a webcam.
 
