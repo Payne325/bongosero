@@ -11,7 +11,7 @@ type Boundingbox = ((i32, i32), (i32, i32));
 // Maybe they can be stored in a settings file? JSON?
 const MOVE_DEAD_ZONE: f32 = 3.0;
 const SCREEN : (i32, i32) = (800, 600); //Game screen coord space
-const F_TRAK_MAX_BNDS : (i32, i32) = (600, 420); //f-trak coord space -> Todo. Create some sort of calibration routine to get this
+const F_TRAK_MAX_BNDS : (i32, i32) = (550, 385); //(600, 420) is actual f-trak coord space -> Todo. Create some sort of calibration routine to get this scale
 
 pub struct BongoseroMovement {
    m_terminated : bool,
@@ -105,7 +105,7 @@ impl input_device::InputDevice for BongoseroMovement {
 
       input_device::UserCommand::new_positional_based(
          Vector::ZERO, 
-         Vector::new(self.m_prev_position as f32, 516.0), 
+         Vector::new(800.0-self.m_prev_position as f32, 516.0), //without screen width - pos, movement ends up opposite to what's on screen.
          false)
    }
 
