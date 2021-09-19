@@ -16,7 +16,7 @@ The game is expected to be built with cargo, but there are a couple of additiona
 ### Face tracking for player movement
 Face tracking is handled by the [`f-trak`](https://github.com/Payne325/f-trak) crate, which relies on the [`opencv-rust`](https://github.com/twistedfall/opencv-rust) crate. Please follow the set up procedure for `opencv-rust` in its documentation.
 
-Using Windows, I installed opencv 4.5.3 via chocolatey and set the following environment variables.
+Using Windows, I installed opencv 4.1.2 via chocolatey and set the following environment variables.
 
 `OPENCV_DIR` `"$ChocolateyToolsLocation\opencv\build\x64\vc15\lib"`
 
