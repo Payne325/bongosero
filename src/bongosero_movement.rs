@@ -105,7 +105,7 @@ impl input_device::InputDevice for BongoseroMovement {
 
       input_device::UserCommand::new_positional_based(
          Vector::ZERO, 
-         Vector::new(800.0-self.m_prev_position as f32, 516.0), //without screen width - pos, movement ends up opposite to what's on screen.
+         Vector::new(800.0-self.m_prev_position, 516.0), //without screen width - pos, movement ends up opposite to what's on screen.
          false)
    }
 

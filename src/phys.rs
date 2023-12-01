@@ -103,7 +103,6 @@ impl Phys {
    }
 
    pub fn tick(&mut self, dt: f32) {
-      let dt = dt;
       // Propagate positions
       for mut body in self.bodies_mut() {
          body.step(dt);

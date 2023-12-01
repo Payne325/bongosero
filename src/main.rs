@@ -51,7 +51,7 @@ async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()>{
    loop {
       //Handle keyboard input
       //Todo: replace this with bongo/webcam controls
-      while let Some(_) = input.next_event().await {}
+      while input.next_event().await.is_some() {}
       game.update(&input);
 
       //Draw

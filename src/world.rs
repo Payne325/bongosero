@@ -106,12 +106,9 @@ impl World {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
       for bullet_id in &self.m_existing_bullets {
-         let body_optional = self.m_phys.get_body(*bullet_id);
-
-         match body_optional {
-            Some(b) => positions.push_back(b.pos),
-            None => {}
-         }         
+         if let Some(b) = self.m_phys.get_body(*bullet_id) {
+            positions.push_back(b.pos)
+         }
       }
 
       positions
@@ -121,12 +118,9 @@ impl World {
       let mut positions: VecDeque<Vector> = VecDeque::new();
 
       for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
-         let body_optional = self.m_phys.get_body(*enemy_id);
-
-         match body_optional {
-            Some(b) => positions.push_back(b.pos),
-            None => {}
-         }         
+         if let Some(b) = self.m_phys.get_body(*enemy_id) {
+            positions.push_back(b.pos)
+         }
       }
 
       positions
@@ -153,9 +147,9 @@ impl World {
                   return true;
                }
 
-               return false;
+               false
             },
-            None => { return false; }
+            None => { false}
          }
       };
 
@@ -163,22 +157,18 @@ impl World {
       for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
          let enemy_optional = self.m_phys.get_body(*enemy_id);
 
-         match enemy_optional {
-            Some(enemy) => {
+         if let Some(enemy) = enemy_optional {
+            for bullet_id in &self.m_existing_bullets {
+               let detection_range = 48.0; // half bullet size + half enemy size
+               let _ = handle_enemy_other_collision(*enemy_id, &enemy, *bullet_id, self.m_phys.get_body(*bullet_id), detection_range);
+            }
 
-               for bullet_id in &self.m_existing_bullets {
-                  let detection_range = 48.0; // half bullet size + half enemy size
-                  let _ = handle_enemy_other_collision(*enemy_id, &enemy, *bullet_id, self.m_phys.get_body(*bullet_id), detection_range);
-               }
-
-               let detection_range = 64.0; // half player size + half enemy size
-               let player_hit = handle_enemy_other_collision(*enemy_id, &enemy, self.m_player, self.m_phys.get_body(self.m_player), detection_range);
-               if player_hit {
-                  self.m_game_over = true;
-               }
-            },
-            None => {}
-         }  
+            let detection_range = 64.0; // half player size + half enemy size
+            let player_hit = handle_enemy_other_collision(*enemy_id, &enemy, self.m_player, self.m_phys.get_body(self.m_player), detection_range);
+            if player_hit {
+               self.m_game_over = true;
+            }
+         }
       }
 
       for id in to_remove {
@@ -187,57 +177,41 @@ impl World {
    }
 
    fn handle_bullets_out_of_bounds(&mut self) {
-
       let mut to_remove: VecDeque<u64> = VecDeque::new();
 
       for bullet_id in &self.m_existing_bullets {
-         let body_optional = self.m_phys.get_body(*bullet_id);
-
-         match body_optional {
-            Some(b) => {
-               if b.pos.y < 16.0 {
-                  to_remove.push_back(*bullet_id);
-               }
-            },
-            None => {}
+         if let Some(b) = self.m_phys.get_body(*bullet_id) {
+            if b.pos.y < 16.0 {
+               to_remove.push_back(*bullet_id);
+            }
          }         
       }
 
       for id in to_remove {
-
          self.m_phys.delete_body(id);
       }
-
-      ()
    }
 
    fn handle_enemies_out_of_bounds(&mut self) {
-
       let mut to_remove: VecDeque<u64> = VecDeque::new();
 
       for enemy_id in &self.m_enemy_factory.existing_enemy_ids() {
-         let body_optional = self.m_phys.get_body(*enemy_id);
+         if let Some(b) = self.m_phys.get_body(*enemy_id) {
+            if b.pos.y > 532.0 {
+               to_remove.push_back(*enemy_id);
 
-         match body_optional {
-            Some(b) => {
-               if b.pos.y > 532.0 {
-                  to_remove.push_back(*enemy_id);
-
-                  //Enemy reached the bottom, game ends
-                  self.m_game_over = true;
-               }
-            },
-            None => {}
-         }         
+               //Enemy reached the bottom, game ends
+               self.m_game_over = true;
+            }
+         }        
       }
 
       for id in to_remove {
          self.m_phys.delete_body(id);
       }
-
-      ()
    }
 
+   #[allow(non_snake_case)]
    fn clean_up_HACK(&mut self) {
       //remove dangling references
       // nb: Enemy factory and world hold references to enemy and bullet bodies
@@ -247,13 +221,11 @@ impl World {
       let mut bullets_to_remove: VecDeque<usize> = VecDeque::new();
 
       for i in 0..self.m_existing_bullets.len() {
-
          let bullet_id = self.m_existing_bullets[i];
          let body = self.m_phys.get_body(bullet_id);
 
-         match body {
-            Some(_) => {}, 
-            None => { bullets_to_remove.push_back(i) }
+         if body.is_none() {
+            bullets_to_remove.push_back(i);
          }
       }
 
@@ -264,15 +236,11 @@ impl World {
 
       let mut enemies_to_remove: VecDeque<usize> = VecDeque::new();
       let enemies = self.m_enemy_factory.existing_enemy_ids();
-      for i in 0..enemies.len() {
+      for (i, enemy_id) in enemies.iter().enumerate() {
+         let body = self.m_phys.get_body(*enemy_id);
 
-
-         let enemy_id = enemies[i];
-         let body = self.m_phys.get_body(enemy_id);
-
-         match body {
-            Some(_) => {}, 
-            None => { enemies_to_remove.push_back(i) }
+         if body.is_none() {
+            enemies_to_remove.push_back(i)
          }
       }
 
