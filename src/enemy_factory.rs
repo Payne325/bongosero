@@ -30,11 +30,11 @@ impl EnemyFactory {
 
       let mut rng = rand::thread_rng();
       
-      if rng.gen_range(0, 100) < self.m_difficulty {
+      if rng.gen_range(0..100) < self.m_difficulty {
          //create new enemy
 
          //range = (half enemy sprite + min offset , screen width - half enemy sprite - min offset)
-         let x_pos = rng.gen_range(57.0, 743.0);
+         let x_pos = rng.gen_range(57.0..743.0);
          let y_vel = MIN_ENEMY_SPEED * self.m_difficulty as f32;
 
          if cfg!(feature = "debug") {
