@@ -198,7 +198,7 @@ checksum = "0d8c1fef690941d3e7788d328517591fecc684c084084702d6ff1641e993699a"
 
 [[package]]
 name = "bongosero"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "f-trak",
  "gc-adapter",
@@ -281,9 +281,9 @@ dependencies = [
 
 [[package]]
 name = "clang"
-version = "1.0.3"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34c6913be3a1c94f52fb975cdec7ef5a7b69de10a55de66dcbc30d7046b85fa1"
+checksum = "84c044c781163c001b913cd018fc95a628c50d0d2dfea8bca77dad71edb16e37"
 dependencies = [
  "clang-sys",
  "libc",
@@ -515,9 +515,9 @@ dependencies = [
 
 [[package]]
 name = "f-trak"
-version = "0.1.0"
+version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1aac2b1151e685d4f24aca6564b452728633a5ee8b8308160b8682384cb218e9"
+checksum = "3cf7cfa1089d77829fc567ef5dc9deaa3fccb178fa099204395a3646ec3775c8"
 dependencies = [
  "opencv",
 ]
@@ -899,9 +899,9 @@ checksum = "8eaf4bc02d17cbdd7ff4c7438cafcdf7fb9a4613313ad11b4f8fefe7d3fa0130"
 
 [[package]]
 name = "jobserver"
-version = "0.1.21"
+version = "0.1.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c71313ebb9439f74b00d9d2dcec36440beaf57a6aa0623068441dd7cd81a7f2"
+checksum = "8c37f63953c4c63420ed5fd3d6d398c719489b9f872b9fa683262f8edd363c7d"
 dependencies = [
  "libc",
 ]
@@ -1047,12 +1047,6 @@ checksum = "62bb907fe88d54d8d9ce32a3cceab4218ed2f6b7d35617cafe9adf84e43919cb"
 dependencies = [
  "libc",
 ]
-
-[[package]]
-name = "maplit"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3e2e65a1a2e43cfcb47a895c4c8b10d1f4a61097f9f254f183aee60cad9c651d"
 
 [[package]]
 name = "maybe-uninit"
@@ -1304,35 +1298,32 @@ checksum = "260e51e7efe62b592207e9e13a68e43692a7a279171d6ba57abd208bf23645ad"
 
 [[package]]
 name = "opencv"
-version = "0.46.3"
+version = "0.83.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aaceb178970cea3be8e8d7a1554d496092be90847cf1cccc846bfa118a63f9ce"
+checksum = "998598d7574b0ec0f7230b7b9782ab516ccf612dbacb6ba83ca1b0e2af537359"
 dependencies = [
  "cc",
- "clang",
  "dunce",
- "glob",
  "jobserver",
  "libc",
  "num-traits",
  "once_cell",
  "opencv-binding-generator",
  "pkg-config",
- "semver 0.10.0",
+ "semver 1.0.20",
  "shlex",
  "vcpkg",
 ]
 
 [[package]]
 name = "opencv-binding-generator"
-version = "0.21.3"
+version = "0.67.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a2f60ec2ee0b06d1266f37d7c083417412858410fd6e91b1353fb69ac797d8cf"
+checksum = "eb6b3b79658fe7db11c250913b85915b4cadc7bf5f70181572f55437327fb294"
 dependencies = [
  "clang",
  "clang-sys",
  "dunce",
- "maplit",
  "once_cell",
  "percent-encoding",
  "regex",
@@ -1788,12 +1779,9 @@ dependencies = [
 
 [[package]]
 name = "semver"
-version = "0.10.0"
+version = "1.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "394cec28fa623e00903caf7ba4fa6fb9a0e260280bb8cdbbba029611108a0190"
-dependencies = [
- "semver-parser",
-]
+checksum = "836fa6a3e1e547f9a2c4040802ec865b5d85f4014efe00555d7090a3dcaa1090"
 
 [[package]]
 name = "semver-parser"
@@ -1850,9 +1838,9 @@ dependencies = [
 
 [[package]]
 name = "shlex"
-version = "0.1.1"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7fdf1b9db47230893d76faad238fd6097fd6d6a9245cd7a4d90dbd639536bbd2"
+checksum = "a7cee0529a6d40f580e7a5e6c495c8fbfe21b7b52795ed4bb5e62cdf92bc6380"
 
 [[package]]
 name = "simple_logger"
