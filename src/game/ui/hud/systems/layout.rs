@@ -25,10 +25,10 @@ pub fn build_hud(commands: &mut Commands, asset_server: &Res<AssetServer>) -> En
                     ..default()
                 })
                 .with_children(|parent| {
-                    // Star Image
+                    // Bullet Image
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/star.png").into(),
+                        image: asset_server.load("sprites/bullet.png").into(),
                         ..default()
                     });
                     // Score Text
@@ -75,7 +75,7 @@ pub fn build_hud(commands: &mut Commands, asset_server: &Res<AssetServer>) -> En
                     // Enemy Image
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/ball_red_large.png").into(),
+                        image: asset_server.load("sprites/enemy.png").into(),
                         ..default()
                     });
                 });

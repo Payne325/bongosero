@@ -7,8 +7,8 @@ use crate::events::GameOver;
 use crate::game::enemy::components::*;
 use crate::game::enemy::ENEMY_SIZE;
 use crate::game::score::resources::*;
-use crate::game::star::components::Star;
-use crate::game::star::BULLET_SIZE;
+use crate::game::bullet::components::Bullet;
+use crate::game::bullet::BULLET_SIZE;
 
 pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
@@ -76,7 +76,7 @@ pub fn player_fires_gun(
                     texture: asset_server.load("sprites/bullet.png"),
                     ..default()
                 },
-                Star {},
+                Bullet {},
             ));
         }
     }
