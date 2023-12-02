@@ -31,8 +31,7 @@ impl Plugin for EnemyPlugin {
             .add_systems(
                 (
                     enemy_movement,
-                    update_enemy_direction,
-                    confine_enemy_movement,
+                    check_enemy_reached_ground,
                     tick_enemy_spawn_timer,
                     spawn_enemies_over_time,
                 )
