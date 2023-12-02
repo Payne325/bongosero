@@ -128,7 +128,7 @@ fn spawn_single_enemy(commands: &mut Commands, window: &Window, asset_server: &R
     commands.spawn((
         SpriteBundle {
             transform: Transform::from_xyz(x, y, 0.0),
-            texture: asset_server.load("sprites/ball_red_large.png"),
+            texture: asset_server.load("sprites/enemy.png"),
             ..default()
         },
         Enemy {

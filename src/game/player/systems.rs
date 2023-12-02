@@ -12,6 +12,7 @@ use crate::game::star::STAR_SIZE;
 
 pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
+pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -22,8 +23,8 @@ pub fn spawn_player(
 
     commands.spawn((
         SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
-            texture: asset_server.load("sprites/ball_blue_large.png"),
+            transform: Transform::from_xyz(window.width() / 2.0, window.height() * PLAYER_SPAWN_HEIGHT_REL, 0.0),
+            texture: asset_server.load("sprites/player.png"),
             ..default()
         },
         Player {},
@@ -50,12 +51,12 @@ pub fn player_movement(
         if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
             direction += Vec3::new(1.0, 0.0, 0.0);
         }
-        if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W) {
-            direction += Vec3::new(0.0, 1.0, 0.0);
-        }
-        if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S) {
-            direction += Vec3::new(0.0, -1.0, 0.0);
-        }
+        // if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W) {
+        //     direction += Vec3::new(0.0, 1.0, 0.0);
+        // }
+        // if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S) {
+        //     direction += Vec3::new(0.0, -1.0, 0.0);
+        // }
 
         if direction.length() > 0.0 {
             direction = direction.normalize();
