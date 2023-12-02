@@ -8,10 +8,8 @@ edition = "2021"
 
 [dependencies]
 gc-adapter = {version = "0.1.2", features = ["libusb"]}
-quicksilver = "0.4.0"
 f-trak = "0.2.0"
+bevy = "0.10.0"
 rand = "0.8.5"
 
 [features]
-keyboard = [] # If used, keyboard controls are compiled, else bongo and camera controls used
-debug = [] # If used, will print out debug information to std::out.
