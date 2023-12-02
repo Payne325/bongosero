@@ -32,7 +32,7 @@ impl Plugin for GamePlugin {
             .add_plugin(EnemyPlugin)
             .add_plugin(PlayerPlugin)
             .add_plugin(ScorePlugin)
-            //.add_plugin(StarPlugin)
+            .add_plugin(StarPlugin)
             .add_plugin(GameUIPlugin)
             // Systems
             .add_system(toggle_simulation.run_if(in_state(AppState::Game)))

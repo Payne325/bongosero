@@ -8,7 +8,7 @@ use crate::game::enemy::components::*;
 use crate::game::enemy::ENEMY_SIZE;
 use crate::game::score::resources::*;
 use crate::game::star::components::Star;
-use crate::game::star::STAR_SIZE;
+use crate::game::star::BULLET_SIZE;
 
 pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
@@ -51,18 +51,34 @@ pub fn player_movement(
         if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
             direction += Vec3::new(1.0, 0.0, 0.0);
         }
-        // if keyboard_input.pressed(KeyCode::Up) || keyboard_input.pressed(KeyCode::W) {
-        //     direction += Vec3::new(0.0, 1.0, 0.0);
-        // }
-        // if keyboard_input.pressed(KeyCode::Down) || keyboard_input.pressed(KeyCode::S) {
-        //     direction += Vec3::new(0.0, -1.0, 0.0);
-        // }
 
         if direction.length() > 0.0 {
             direction = direction.normalize();
         }
 
         transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
+    }
+}
+
+pub fn player_fires_gun(
+    mut commands: Commands,
+    keyboard_input: Res<Input<KeyCode>>,
+    player_query: Query<&Transform, With<Player>>,
+    asset_server: Res<AssetServer>,
+) {
+    if let Ok(transform) = player_query.get_single() {
+        if keyboard_input.just_released(KeyCode::L) {
+            let position = transform.translation + Vec3::new(0.0, BULLET_SIZE / 2.0, 0.0);
+
+            commands.spawn((
+                SpriteBundle {
+                    transform: Transform::from_translation(position),
+                    texture: asset_server.load("sprites/bullet.png"),
+                    ..default()
+                },
+                Star {},
+            ));
+        }
     }
 }
 
@@ -120,31 +136,6 @@ pub fn enemy_hit_player(
                 audio.play(sound_effect);
                 commands.entity(player_entity).despawn();
                 game_over_event_writer.send(GameOver { score: score.value });
-            }
-        }
-    }
-}
-
-pub fn player_hit_star(
-    mut commands: Commands,
-    player_query: Query<&Transform, With<Player>>,
-    star_query: Query<(Entity, &Transform), With<Star>>,
-    asset_server: Res<AssetServer>,
-    audio: Res<Audio>,
-    mut score: ResMut<Score>,
-) {
-    if let Ok(player_transform) = player_query.get_single() {
-        for (star_entity, star_transform) in star_query.iter() {
-            let distance = player_transform
-                .translation
-                .distance(star_transform.translation);
-
-            if distance < PLAYER_SIZE / 2.0 + STAR_SIZE / 2.0 {
-                println!("Player hit star!");
-                score.value += 1;
-                let sound_effect = asset_server.load("audio/laserLarge_000.ogg");
-                audio.play(sound_effect);
-                commands.entity(star_entity).despawn();
             }
         }
     }

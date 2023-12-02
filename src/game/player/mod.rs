@@ -27,16 +27,13 @@ impl Plugin for PlayerPlugin {
             .add_systems(
                 (
                     player_movement.in_set(MovementSystemSet),
+                    player_fires_gun.in_set(MovementSystemSet),
                     confine_player_movement.in_set(ConfinementSystemSet),
                 )
                     .in_set(OnUpdate(AppState::Game))
                     .in_set(OnUpdate(SimulationState::Running)),
             )
-            .add_systems(
-                (enemy_hit_player, player_hit_star)
-                    .in_set(OnUpdate(AppState::Game))
-                    .in_set(OnUpdate(SimulationState::Running)),
-            )
+            .add_system(enemy_hit_player.in_set(OnUpdate(AppState::Game)).in_set(OnUpdate(SimulationState::Running)))
             // On Exit State
             .add_system(despawn_player.in_schedule(OnExit(AppState::Game)));
     }
