@@ -17,7 +17,11 @@ impl Plugin for BulletPlugin {
     fn build(&self, app: &mut App) {
         app
             // Systems
-            .add_system(bullet_movement
+            .add_systems(
+                (
+                    bullet_movement, 
+                    check_bullet_exceeded_bounds
+                )
                 .in_set(OnUpdate(AppState::Game))
                 .in_set(OnUpdate(SimulationState::Running)))
             // On Exit State
