@@ -36,6 +36,9 @@ impl Plugin for PlayerPlugin {
                     .in_set(OnUpdate(SimulationState::Running)),
             )
             .add_system(enemy_hit_player.in_set(OnUpdate(AppState::Game)).in_set(OnUpdate(SimulationState::Running)))
+            .add_system(ignore_face_track_frames.in_set(OnUpdate(AppState::MainMenu)))
+            .add_system(ignore_face_track_frames.in_set(OnUpdate(AppState::GameOver)))
+            .add_system(ignore_face_track_frames.in_set(OnUpdate(AppState::Game)).in_set(OnUpdate(SimulationState::Paused)))
             // On Exit State
             .add_system(despawn_player.in_schedule(OnExit(AppState::Game)));
     }

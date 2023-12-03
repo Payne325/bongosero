@@ -23,10 +23,6 @@ impl Default for FaceTracker {
         let (terminate_transmitter, terminate_receiver) = mpsc::channel::<bool>();
 
         thread::spawn(move || {
-            if cfg!(feature = "debug") {
-                println!("DEBUG: Spawned the face capture thread!");
-            }
-
             let mut face_cap = f_trak::FaceCapture::new(
                 bbox_transmitter,
                 terminate_transmitter,

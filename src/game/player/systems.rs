@@ -51,10 +51,7 @@ pub fn player_movement(
 
         if let Ok(bbox) = face_capture.bbox_receiver.try_recv() {
             let x_pos = f_trak_to_screen_coords((bbox.0 .0 + bbox.1 .0) as f32 / 2.0, window);
-
-            // if (x_pos - transform.translation.x).abs() > MOVE_DEAD_ZONE {
-            transform.translation.x = x_pos;
-            // }            
+            transform.translation.x = x_pos;       
         }
     }
 }
@@ -142,6 +139,13 @@ pub fn enemy_hit_player(
 
 pub fn setup_face_capture(world: &mut World) {
     world.insert_non_send_resource(FaceTracker::default());
+}
+
+pub fn ignore_face_track_frames(face_capture: NonSend<FaceTracker>) {
+    // continue to read frames from face capture while game paused.
+    // this should stabilise the movement at game start
+    let _ = face_capture.bbox_receiver.try_recv();
+    //println!("MARCOPOLO!");
 }
 
 fn f_trak_to_screen_coords(position: f32, window: &Window) -> f32 {
