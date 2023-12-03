@@ -3,6 +3,8 @@ use bevy::window::PrimaryWindow;
 use rand::prelude::*;
 
 use crate::events::GameOver;
+use crate::game::bullet::BULLET_SIZE;
+use crate::game::bullet::components::Bullet;
 use crate::game::score::resources::Score;
 
 // use crate::enemy::components::*;
@@ -56,6 +58,35 @@ pub fn check_enemy_reached_ground(
         }
 
         transform.translation = translation;
+    }
+}
+
+pub fn enemy_hit_bullet(
+    mut commands: Commands,
+    bullet_query: Query<(Entity, &Transform), With<Bullet>>,
+    enemy_query: Query<(Entity, &Transform), With<Enemy>>,
+    asset_server: Res<AssetServer>,
+    audio: Res<Audio>,
+    mut score: ResMut<Score>,
+) {
+    for (bullet_entity, bullet_transform) in bullet_query.iter(){
+        for (enemy_entity, enemy_transform) in enemy_query.iter() {
+            let distance = bullet_transform
+                .translation
+                .distance(enemy_transform.translation);
+
+            let bullet_radius = BULLET_SIZE / 2.0;
+            let enemy_radius = ENEMY_SIZE / 2.0;
+            
+            if distance < bullet_radius + enemy_radius {
+                println!("Enemy hit bullet! It dead!");
+                score.value += 1;
+                let sound_effect = asset_server.load("audio/laserLarge_000.ogg");
+                audio.play(sound_effect);
+                commands.entity(bullet_entity).despawn();
+                commands.entity(enemy_entity).despawn();
+            }
+        }
     }
 }
 
