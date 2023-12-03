@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
+use super::components::FaceTracker;
 use super::components::Player;
 
 use crate::events::GameOver;
@@ -10,9 +11,12 @@ use crate::game::score::resources::*;
 use crate::game::bullet::components::Bullet;
 use crate::game::bullet::BULLET_SIZE;
 
-pub const PLAYER_SPEED: f32 = 500.0;
+// /pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
 pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
+
+const F_TRAK_MAX_BNDS: (i32, i32) = (550, 385); //(600, 420) is actual f-trak coord space -> Todo. Create some sort of calibration routine to get this scale
+//const MOVE_DEAD_ZONE: f32 = 0.0;
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -38,25 +42,20 @@ pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<P
 }
 
 pub fn player_movement(
-    keyboard_input: Res<Input<KeyCode>>,
     mut player_query: Query<&mut Transform, With<Player>>,
-    time: Res<Time>,
+    window_query: Query<&Window, With<PrimaryWindow>>,
+    face_capture: NonSend<FaceTracker>
 ) {
     if let Ok(mut transform) = player_query.get_single_mut() {
-        let mut direction = Vec3::ZERO;
+        let window = window_query.get_single().unwrap();
 
-        if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A) {
-            direction += Vec3::new(-1.0, 0.0, 0.0);
-        }
-        if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
-            direction += Vec3::new(1.0, 0.0, 0.0);
-        }
+        if let Ok(bbox) = face_capture.bbox_receiver.try_recv() {
+            let x_pos = f_trak_to_screen_coords((bbox.0 .0 + bbox.1 .0) as f32 / 2.0, window);
 
-        if direction.length() > 0.0 {
-            direction = direction.normalize();
+            // if (x_pos - transform.translation.x).abs() > MOVE_DEAD_ZONE {
+            transform.translation.x = x_pos;
+            // }            
         }
-
-        transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
     }
 }
 
@@ -139,4 +138,18 @@ pub fn enemy_hit_player(
             }
         }
     }
+}
+
+pub fn setup_face_capture(world: &mut World) {
+    world.insert_non_send_resource(FaceTracker::default());
+}
+
+fn f_trak_to_screen_coords(position: f32, window: &Window) -> f32 {
+    let min = 0.0;
+    let max = (F_TRAK_MAX_BNDS.0) as f32;
+    let norm_pos = (position - min) / (max - min);
+
+    //multiply to move to new coord system
+    // also reverse so that player and char move in same direction
+    window.width() - (norm_pos * window.width())
 }

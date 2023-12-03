@@ -21,6 +21,8 @@ impl Plugin for PlayerPlugin {
         app
             // Configure System Sets
             .configure_set(MovementSystemSet.before(ConfinementSystemSet))
+            // Startup system
+            .add_startup_system(setup_face_capture)
             // On Enter State
             .add_system(spawn_player.in_schedule(OnEnter(AppState::Game)))
             // Systems
