@@ -16,8 +16,8 @@ use crate::resources::Bongo;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
 pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
-const F_TRAK_MAX_BNDS: (i32, i32) = (550, 385); //(600, 420) is actual f-trak coord space -> Todo. Create some sort of calibration routine to get this scale
-                                                //const MOVE_DEAD_ZONE: f32 = 0.0;
+const F_TRAK_MAX_BNDS: (i32, i32) = (600, 420); //Todo. Create some sort of calibration routine to get this scale
+//const MOVE_DEAD_ZONE: f32 = 0.0;
 
 pub fn spawn_player(
     mut commands: Commands,

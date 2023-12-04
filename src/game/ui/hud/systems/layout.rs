@@ -28,7 +28,7 @@ pub fn build_hud(commands: &mut Commands, asset_server: &Res<AssetServer>) -> En
                     // Bullet Image
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/bullet.png").into(),
+                        image: asset_server.load("sprites/enemy.png").into(),
                         ..default()
                     });
                     // Score Text
@@ -47,37 +47,6 @@ pub fn build_hud(commands: &mut Commands, asset_server: &Res<AssetServer>) -> En
                         },
                         ScoreText {},
                     ));
-                });
-            // RHS
-            parent
-                .spawn(NodeBundle {
-                    style: RHS_STYLE,
-                    background_color: BACKGROUND_COLOR.into(),
-                    ..default()
-                })
-                .with_children(|parent| {
-                    // Enemy Text
-                    parent.spawn((
-                        TextBundle {
-                            style: Style { ..default() },
-                            text: Text {
-                                sections: vec![TextSection::new(
-                                    "0",
-                                    get_text_style(&asset_server),
-                                )],
-                                alignment: TextAlignment::Center,
-                                ..default()
-                            },
-                            ..default()
-                        },
-                        EnemyText {},
-                    ));
-                    // Enemy Image
-                    parent.spawn(ImageBundle {
-                        style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/enemy.png").into(),
-                        ..default()
-                    });
                 });
         })
         .id();

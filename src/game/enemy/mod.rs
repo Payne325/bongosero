@@ -22,7 +22,7 @@ impl Plugin for EnemyPlugin {
     fn build(&self, app: &mut App) {
         app
             // Resources
-            .init_resource::<EnemySpawnTimer>()
+            .init_resource::<EnemySpawnTrigger>()
             // Enter State Systems
             .add_system(spawn_intial_enemies.in_schedule(OnEnter(AppState::Game)))
             // Systems
@@ -30,7 +30,7 @@ impl Plugin for EnemyPlugin {
                 (
                     enemy_movement,
                     check_enemy_reached_ground,
-                    tick_enemy_spawn_timer,
+                    tick_enemy_spawn_trigger,
                     spawn_enemies_over_time,
                 )
                     .in_set(OnUpdate(AppState::Game))

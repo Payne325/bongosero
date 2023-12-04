@@ -15,6 +15,12 @@ pub fn interact_with_resume_button(
     mut simulation_state_next_state: ResMut<NextState<SimulationState>>,
     mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_select_pressed() {
+        simulation_state_next_state.set(SimulationState::Running);
+        return;
+    }
+
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {
@@ -25,13 +31,7 @@ pub fn interact_with_resume_button(
                 *color = HOVERED_BUTTON.into();
             }
             Interaction::None => {
-                // check in case we tried to interact via bongo instead
-                if bongo.check_select_pressed() {
-                    *color = PRESSED_BUTTON.into();
-                    simulation_state_next_state.set(SimulationState::Running);
-                } else {
-                    *color = NORMAL_BUTTON.into();
-                }
+                *color = NORMAL_BUTTON.into();
             }
         }
     }
@@ -45,6 +45,12 @@ pub fn interact_with_main_menu_button(
     mut app_state_next_state: ResMut<NextState<AppState>>,
     mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_back_pressed() {
+        app_state_next_state.set(AppState::MainMenu);
+        return;
+    }
+
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {
@@ -55,13 +61,7 @@ pub fn interact_with_main_menu_button(
                 *color = HOVERED_BUTTON.into();
             }
             Interaction::None => {
-                // check in case we tried to interact via bongo instead
-                if bongo.check_back_pressed() {
-                    *color = PRESSED_BUTTON.into();
-                    app_state_next_state.set(AppState::MainMenu);
-                } else {
-                    *color = NORMAL_BUTTON.into();
-                }
+                *color = NORMAL_BUTTON.into();
             }
         }
     }

@@ -90,17 +90,17 @@ pub fn enemy_hit_bullet(
     }
 }
 
-pub fn tick_enemy_spawn_timer(mut enemy_spawn_timer: ResMut<EnemySpawnTimer>, time: Res<Time>) {
-    enemy_spawn_timer.timer.tick(time.delta());
+pub fn tick_enemy_spawn_trigger(mut enemy_spawn_trigger: ResMut<EnemySpawnTrigger>, time: Res<Time>) {
+    enemy_spawn_trigger.tick(time.delta());
 }
 
 pub fn spawn_enemies_over_time(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
-    enemy_spawn_timer: Res<EnemySpawnTimer>,
+    enemy_spawn_trigger: Res<EnemySpawnTrigger>,
 ) {
-    if enemy_spawn_timer.timer.finished() {
+    if enemy_spawn_trigger.should_spawn_enemy() {
         let window = window_query.get_single().unwrap();
         spawn_single_enemy(&mut commands, &window, &asset_server);
     }

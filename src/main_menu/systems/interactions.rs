@@ -14,6 +14,12 @@ pub fn interact_with_play_button(
     mut app_state_next_state: ResMut<NextState<AppState>>,
     mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_select_pressed() {
+        app_state_next_state.set(AppState::Game);
+        return;
+    }
+
     if let Ok((interaction, mut background_color)) = button_query.get_single_mut() {
         match *interaction {
             Interaction::Clicked => {
@@ -24,13 +30,7 @@ pub fn interact_with_play_button(
                 *background_color = HOVERED_BUTTON_COLOR.into();
             }
             Interaction::None => {
-                // check in case we tried to interact via bongo instead
-                if bongo.check_select_pressed() {
-                    *background_color = PRESSED_BUTTON_COLOR.into();
-                    app_state_next_state.set(AppState::Game);
-                } else {
-                    *background_color = NORMAL_BUTTON_COLOR.into();
-                }
+                *background_color = NORMAL_BUTTON_COLOR.into();
             }
         }
     }
@@ -44,6 +44,11 @@ pub fn interact_with_quit_button(
     >,
     mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_back_pressed() {
+        app_exit_event_writer.send(AppExit);
+    }
+
     if let Ok((interaction, mut background_color)) = button_query.get_single_mut() {
         match *interaction {
             Interaction::Clicked => {
@@ -54,13 +59,7 @@ pub fn interact_with_quit_button(
                 *background_color = HOVERED_BUTTON_COLOR.into();
             }
             Interaction::None => {
-                // check in case we tried to interact via bongo instead
-                if bongo.check_back_pressed() {
-                    *background_color = PRESSED_BUTTON_COLOR.into();
-                    app_exit_event_writer.send(AppExit);
-                } else {
-                    *background_color = NORMAL_BUTTON_COLOR.into();
-                }
+                *background_color = NORMAL_BUTTON_COLOR.into();
             }
         }
     }
