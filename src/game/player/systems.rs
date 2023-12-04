@@ -5,18 +5,19 @@ use super::components::FaceTracker;
 use super::components::Player;
 
 use crate::events::GameOver;
+use crate::game::bullet::components::Bullet;
+use crate::game::bullet::BULLET_SIZE;
 use crate::game::enemy::components::*;
 use crate::game::enemy::ENEMY_SIZE;
 use crate::game::score::resources::*;
-use crate::game::bullet::components::Bullet;
-use crate::game::bullet::BULLET_SIZE;
+use crate::resources::Bongo;
 
 // /pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
 pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
 const F_TRAK_MAX_BNDS: (i32, i32) = (550, 385); //(600, 420) is actual f-trak coord space -> Todo. Create some sort of calibration routine to get this scale
-//const MOVE_DEAD_ZONE: f32 = 0.0;
+                                                //const MOVE_DEAD_ZONE: f32 = 0.0;
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -27,7 +28,11 @@ pub fn spawn_player(
 
     commands.spawn((
         SpriteBundle {
-            transform: Transform::from_xyz(window.width() / 2.0, window.height() * PLAYER_SPAWN_HEIGHT_REL, 0.0),
+            transform: Transform::from_xyz(
+                window.width() / 2.0,
+                window.height() * PLAYER_SPAWN_HEIGHT_REL,
+                0.0,
+            ),
             texture: asset_server.load("sprites/player.png"),
             ..default()
         },
@@ -44,14 +49,14 @@ pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<P
 pub fn player_movement(
     mut player_query: Query<&mut Transform, With<Player>>,
     window_query: Query<&Window, With<PrimaryWindow>>,
-    face_capture: NonSend<FaceTracker>
+    face_capture: NonSend<FaceTracker>,
 ) {
     if let Ok(mut transform) = player_query.get_single_mut() {
         let window = window_query.get_single().unwrap();
 
         if let Ok(bbox) = face_capture.bbox_receiver.try_recv() {
             let x_pos = f_trak_to_screen_coords((bbox.0 .0 + bbox.1 .0) as f32 / 2.0, window);
-            transform.translation.x = x_pos;       
+            transform.translation.x = x_pos;
         }
     }
 }
@@ -59,11 +64,12 @@ pub fn player_movement(
 pub fn player_fires_gun(
     mut commands: Commands,
     keyboard_input: Res<Input<KeyCode>>,
+    mut bongo: ResMut<Bongo>,
     player_query: Query<&Transform, With<Player>>,
     asset_server: Res<AssetServer>,
 ) {
     if let Ok(transform) = player_query.get_single() {
-        if keyboard_input.just_released(KeyCode::L) {
+        if keyboard_input.just_released(KeyCode::L)  || bongo.check_gun_fired() {
             let position = transform.translation + Vec3::new(0.0, BULLET_SIZE / 2.0, 0.0);
 
             commands.spawn((

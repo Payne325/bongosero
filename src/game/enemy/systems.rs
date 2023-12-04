@@ -3,8 +3,8 @@ use bevy::window::PrimaryWindow;
 use rand::prelude::*;
 
 use crate::events::GameOver;
-use crate::game::bullet::BULLET_SIZE;
 use crate::game::bullet::components::Bullet;
+use crate::game::bullet::BULLET_SIZE;
 use crate::game::score::resources::Score;
 
 // use crate::enemy::components::*;
@@ -69,7 +69,7 @@ pub fn enemy_hit_bullet(
     audio: Res<Audio>,
     mut score: ResMut<Score>,
 ) {
-    for (bullet_entity, bullet_transform) in bullet_query.iter(){
+    for (bullet_entity, bullet_transform) in bullet_query.iter() {
         for (enemy_entity, enemy_transform) in enemy_query.iter() {
             let distance = bullet_transform
                 .translation
@@ -77,7 +77,7 @@ pub fn enemy_hit_bullet(
 
             let bullet_radius = BULLET_SIZE / 2.0;
             let enemy_radius = ENEMY_SIZE / 2.0;
-            
+
             if distance < bullet_radius + enemy_radius {
                 println!("Enemy hit bullet! It dead!");
                 score.value += 1;

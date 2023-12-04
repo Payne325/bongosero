@@ -36,7 +36,11 @@ impl Plugin for EnemyPlugin {
                     .in_set(OnUpdate(AppState::Game))
                     .in_set(OnUpdate(SimulationState::Running)),
             )
-            .add_system(enemy_hit_bullet.in_set(OnUpdate(AppState::Game)).in_set(OnUpdate(SimulationState::Running)))
+            .add_system(
+                enemy_hit_bullet
+                    .in_set(OnUpdate(AppState::Game))
+                    .in_set(OnUpdate(SimulationState::Running)),
+            )
             // Exit State Systems
             .add_system(despawn_enemies.in_schedule(OnExit(AppState::Game)));
     }

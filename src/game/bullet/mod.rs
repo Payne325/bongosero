@@ -18,12 +18,10 @@ impl Plugin for BulletPlugin {
         app
             // Systems
             .add_systems(
-                (
-                    bullet_movement, 
-                    check_bullet_exceeded_bounds
-                )
-                .in_set(OnUpdate(AppState::Game))
-                .in_set(OnUpdate(SimulationState::Running)))
+                (bullet_movement, check_bullet_exceeded_bounds)
+                    .in_set(OnUpdate(AppState::Game))
+                    .in_set(OnUpdate(SimulationState::Running)),
+            )
             // On Exit State
             .add_system(despawn_bullets.in_schedule(OnExit(AppState::Game)));
     }

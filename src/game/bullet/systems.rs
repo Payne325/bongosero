@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
-use super::{BULLET_SPEED, BULLET_SIZE};
 use super::components::Bullet;
+use super::{BULLET_SIZE, BULLET_SPEED};
 
 pub fn despawn_bullets(mut commands: Commands, bullet_query: Query<Entity, With<Bullet>>) {
     for bullet_entity in bullet_query.iter() {
@@ -10,10 +10,7 @@ pub fn despawn_bullets(mut commands: Commands, bullet_query: Query<Entity, With<
     }
 }
 
-pub fn bullet_movement(
-    mut bullet_query: Query<&mut Transform, With<Bullet>>,
-    time: Res<Time>,
-){
+pub fn bullet_movement(mut bullet_query: Query<&mut Transform, With<Bullet>>, time: Res<Time>) {
     for mut transform in bullet_query.iter_mut() {
         transform.translation += Vec3::Y * BULLET_SPEED * time.delta_seconds();
     }

@@ -1,11 +1,13 @@
 pub mod events;
 mod game;
 mod main_menu;
+mod resources;
 mod systems;
 
 use game::GamePlugin;
 use main_menu::MainMenuPlugin;
 
+use resources::Bongo;
 use systems::*;
 
 use bevy::prelude::*;
@@ -18,6 +20,8 @@ fn main() {
         // My Plugins
         .add_plugin(MainMenuPlugin)
         .add_plugin(GamePlugin)
+        // Resources
+        .init_resource::<Bongo>()
         // Startup Systems
         .add_startup_system(spawn_camera)
         // Systems

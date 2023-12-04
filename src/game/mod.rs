@@ -1,14 +1,14 @@
+pub mod bullet;
 pub mod enemy;
 mod player;
 pub mod score;
-pub mod bullet;
 mod systems;
 mod ui;
 
+use bullet::BulletPlugin;
 use enemy::EnemyPlugin;
 use player::PlayerPlugin;
 use score::ScorePlugin;
-use bullet::BulletPlugin;
 use systems::*;
 use ui::GameUIPlugin;
 

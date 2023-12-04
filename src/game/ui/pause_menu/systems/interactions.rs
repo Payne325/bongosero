@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use crate::game::ui::pause_menu::components::*;
 use crate::game::ui::pause_menu::styles::*;
 use crate::game::SimulationState;
+use crate::resources::Bongo;
 use crate::AppState;
 
 pub fn interact_with_resume_button(
@@ -12,6 +13,7 @@ pub fn interact_with_resume_button(
         (Changed<Interaction>, With<ResumeButton>),
     >,
     mut simulation_state_next_state: ResMut<NextState<SimulationState>>,
+    mut bongo: ResMut<Bongo>,
 ) {
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
@@ -23,7 +25,13 @@ pub fn interact_with_resume_button(
                 *color = HOVERED_BUTTON.into();
             }
             Interaction::None => {
-                *color = NORMAL_BUTTON.into();
+                // check in case we tried to interact via bongo instead
+                if bongo.check_select_pressed() {
+                    *color = PRESSED_BUTTON.into();
+                    simulation_state_next_state.set(SimulationState::Running);
+                } else {
+                    *color = NORMAL_BUTTON.into();
+                }
             }
         }
     }
@@ -35,6 +43,7 @@ pub fn interact_with_main_menu_button(
         (Changed<Interaction>, With<MainMenuButton>),
     >,
     mut app_state_next_state: ResMut<NextState<AppState>>,
+    mut bongo: ResMut<Bongo>,
 ) {
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
@@ -46,7 +55,13 @@ pub fn interact_with_main_menu_button(
                 *color = HOVERED_BUTTON.into();
             }
             Interaction::None => {
-                *color = NORMAL_BUTTON.into();
+                // check in case we tried to interact via bongo instead
+                if bongo.check_back_pressed() {
+                    *color = PRESSED_BUTTON.into();
+                    app_state_next_state.set(AppState::MainMenu);
+                } else {
+                    *color = NORMAL_BUTTON.into();
+                }
             }
         }
     }

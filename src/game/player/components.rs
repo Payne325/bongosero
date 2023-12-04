@@ -15,10 +15,13 @@ pub struct FaceTracker {
 
 impl Default for FaceTracker {
     fn default() -> FaceTracker {
-        let protopath = "D:/Portfolio/bongosero/assets/neural_nets/face_detection/deploy.prototxt.txt".to_string();
-        let modelpath = "D:/Portfolio/bongosero/assets/neural_nets/face_detection/model.caffemodel".to_string();
+        let protopath =
+            "D:/Portfolio/bongosero/assets/neural_nets/face_detection/deploy.prototxt.txt"
+                .to_string();
+        let modelpath =
+            "D:/Portfolio/bongosero/assets/neural_nets/face_detection/model.caffemodel".to_string();
         let min_confidence = 0.9;
-    
+
         let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
         let (terminate_transmitter, terminate_receiver) = mpsc::channel::<bool>();
 
@@ -36,7 +39,7 @@ impl Default for FaceTracker {
 
         FaceTracker {
             bbox_receiver,
-            terminate_receiver
+            terminate_receiver,
         }
     }
 }
