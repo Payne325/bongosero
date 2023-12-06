@@ -4,6 +4,7 @@ use bevy::window::PrimaryWindow;
 
 use crate::events::*;
 use crate::AppState;
+use crate::resources::Bongo;
 
 pub fn spawn_camera(
     mut commands: Commands,
@@ -63,4 +64,8 @@ pub fn exit_game(
     if keyboard_input.just_pressed(KeyCode::Escape) {
         app_exit_event_writer.send(AppExit);
     }
+}
+
+pub fn tick_bongo(time: Res<Time>, mut bongo: ResMut<Bongo>) {
+    bongo.tick(time);
 }

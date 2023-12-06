@@ -98,7 +98,7 @@ pub fn spawn_enemies_over_time(
     mut commands: Commands,
     window_query: Query<&Window, With<PrimaryWindow>>,
     asset_server: Res<AssetServer>,
-    enemy_spawn_trigger: Res<EnemySpawnTrigger>,
+    mut enemy_spawn_trigger: ResMut<EnemySpawnTrigger>,
 ) {
     if enemy_spawn_trigger.should_spawn_enemy() {
         let window = window_query.get_single().unwrap();

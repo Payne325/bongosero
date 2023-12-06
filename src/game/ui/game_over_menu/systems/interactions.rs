@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use crate::game::ui::game_over_menu::components::*;
 use crate::game::ui::game_over_menu::styles::*;
 use crate::AppState;
+use crate::resources::Bongo;
 
 pub fn interact_with_restart_button(
     mut button_query: Query<
@@ -11,7 +12,14 @@ pub fn interact_with_restart_button(
         (Changed<Interaction>, With<RestartButton>),
     >,
     mut app_state_next_state: ResMut<NextState<AppState>>,
+    mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_select_pressed() {
+        app_state_next_state.set(AppState::Game);
+        return;
+    }
+
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {
@@ -34,7 +42,14 @@ pub fn interact_with_main_menu_button(
         (Changed<Interaction>, With<MainMenuButton>),
     >,
     mut app_state_next_state: ResMut<NextState<AppState>>,
+    mut bongo: ResMut<Bongo>,
 ) {
+    // check in case we tried to interact via bongo instead
+    if bongo.check_back_pressed() {
+        app_state_next_state.set(AppState::MainMenu);
+        return;
+    }
+
     for (interaction, mut color) in button_query.iter_mut() {
         match *interaction {
             Interaction::Clicked => {

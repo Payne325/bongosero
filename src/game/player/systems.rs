@@ -7,12 +7,13 @@ use super::components::Player;
 use crate::events::GameOver;
 use crate::game::bullet::components::Bullet;
 use crate::game::bullet::BULLET_SIZE;
-use crate::game::enemy::components::*;
-use crate::game::enemy::ENEMY_SIZE;
+use crate::game::enemy::*;
+use crate::game::enemy::components::Enemy;
+use crate::game::enemy::resources::EnemySpawnTrigger;
 use crate::game::score::resources::*;
 use crate::resources::Bongo;
 
-// /pub const PLAYER_SPEED: f32 = 500.0;
+pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
 pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
@@ -48,6 +49,8 @@ pub fn despawn_player(mut commands: Commands, player_query: Query<Entity, With<P
 
 pub fn player_movement(
     mut player_query: Query<&mut Transform, With<Player>>,
+    keyboard_input: Res<Input<KeyCode>>,
+    time: Res<Time>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     face_capture: NonSend<FaceTracker>,
 ) {
@@ -57,6 +60,21 @@ pub fn player_movement(
         if let Ok(bbox) = face_capture.bbox_receiver.try_recv() {
             let x_pos = f_trak_to_screen_coords((bbox.0 .0 + bbox.1 .0) as f32 / 2.0, window);
             transform.translation.x = x_pos;
+        } else {
+            let mut direction = Vec3::ZERO;
+
+            if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A) {
+                direction += Vec3::new(-1.0, 0.0, 0.0);
+            }
+            if keyboard_input.pressed(KeyCode::Right) || keyboard_input.pressed(KeyCode::D) {
+                direction += Vec3::new(1.0, 0.0, 0.0);
+            }
+
+            if direction.length() > 0.0 {
+                direction = direction.normalize();        
+            }
+    
+            transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
         }
     }
 }
@@ -124,6 +142,7 @@ pub fn enemy_hit_player(
     asset_server: Res<AssetServer>,
     audio: Res<Audio>,
     score: Res<Score>,
+    mut enemy_factory: ResMut<EnemySpawnTrigger>,
 ) {
     if let Ok((player_entity, player_transform)) = player_query.get_single_mut() {
         for enemy_transform in enemy_query.iter() {
@@ -138,6 +157,7 @@ pub fn enemy_hit_player(
                 audio.play(sound_effect);
                 commands.entity(player_entity).despawn();
                 game_over_event_writer.send(GameOver { score: score.value });
+                enemy_factory.reset();
             }
         }
     }
