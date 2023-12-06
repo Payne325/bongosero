@@ -3,8 +3,8 @@ use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
 use crate::events::*;
-use crate::AppState;
 use crate::resources::Bongo;
+use crate::AppState;
 
 pub fn spawn_camera(
     mut commands: Commands,

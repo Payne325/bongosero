@@ -7,9 +7,9 @@ use super::components::Player;
 use crate::events::GameOver;
 use crate::game::bullet::components::Bullet;
 use crate::game::bullet::BULLET_SIZE;
-use crate::game::enemy::*;
 use crate::game::enemy::components::Enemy;
 use crate::game::enemy::resources::EnemySpawnTrigger;
+use crate::game::enemy::*;
 use crate::game::score::resources::*;
 use crate::resources::Bongo;
 
@@ -18,7 +18,7 @@ pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
 pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
 const F_TRAK_MAX_BNDS: (i32, i32) = (600, 420); //Todo. Create some sort of calibration routine to get this scale
-//const MOVE_DEAD_ZONE: f32 = 0.0;
+                                                //const MOVE_DEAD_ZONE: f32 = 0.0;
 
 pub fn spawn_player(
     mut commands: Commands,
@@ -71,9 +71,9 @@ pub fn player_movement(
             }
 
             if direction.length() > 0.0 {
-                direction = direction.normalize();        
+                direction = direction.normalize();
             }
-    
+
             transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
         }
     }
@@ -87,7 +87,7 @@ pub fn player_fires_gun(
     asset_server: Res<AssetServer>,
 ) {
     if let Ok(transform) = player_query.get_single() {
-        if keyboard_input.just_released(KeyCode::L)  || bongo.check_gun_fired() {
+        if keyboard_input.just_released(KeyCode::L) || bongo.check_gun_fired() {
             let position = transform.translation + Vec3::new(0.0, BULLET_SIZE / 2.0, 0.0);
 
             commands.spawn((

@@ -1,5 +1,5 @@
-use std::time::Duration;
 use bevy::prelude::*;
+use std::time::Duration;
 
 pub const DIFFICULTY_CHANGE_TIME: f32 = 30.0;
 const ENEMY_SPAWN_COOLDOWN: f32 = 5.0;
@@ -8,15 +8,15 @@ const ENEMY_SPAWN_COOLDOWN: f32 = 5.0;
 pub struct EnemySpawnTrigger {
     spawn_cooldown_timer: Timer,
     difficulty_timer: Timer,
-    difficulty: u8
+    difficulty: u8,
 }
 
 impl Default for EnemySpawnTrigger {
     fn default() -> EnemySpawnTrigger {
         EnemySpawnTrigger {
-            spawn_cooldown_timer: Timer::from_seconds(ENEMY_SPAWN_COOLDOWN, TimerMode::Once), 
+            spawn_cooldown_timer: Timer::from_seconds(ENEMY_SPAWN_COOLDOWN, TimerMode::Once),
             difficulty_timer: Timer::from_seconds(DIFFICULTY_CHANGE_TIME, TimerMode::Once),
-            difficulty: 1
+            difficulty: 1,
         }
     }
 }
@@ -37,12 +37,15 @@ impl EnemySpawnTrigger {
     }
 
     pub fn should_spawn_enemy(&mut self) -> bool {
-        if self.spawn_cooldown_timer.finished(){
-            self.spawn_cooldown_timer.set_duration(Duration::from_secs_f32(ENEMY_SPAWN_COOLDOWN / self.difficulty as f32));
+        if self.spawn_cooldown_timer.finished() {
+            self.spawn_cooldown_timer
+                .set_duration(Duration::from_secs_f32(
+                    ENEMY_SPAWN_COOLDOWN / self.difficulty as f32,
+                ));
             self.spawn_cooldown_timer.reset();
-            return true;   
+            return true;
         }
-        
+
         false
     }
 

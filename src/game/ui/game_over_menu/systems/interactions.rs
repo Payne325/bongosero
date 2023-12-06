@@ -3,8 +3,8 @@ use bevy::prelude::*;
 
 use crate::game::ui::game_over_menu::components::*;
 use crate::game::ui::game_over_menu::styles::*;
-use crate::AppState;
 use crate::resources::Bongo;
+use crate::AppState;
 
 pub fn interact_with_restart_button(
     mut button_query: Query<

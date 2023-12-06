@@ -1,4 +1,4 @@
-use std::{sync::mpsc, thread};
+use std::{path::Path, sync::mpsc, thread};
 
 use bevy::prelude::*;
 
@@ -15,11 +15,18 @@ pub struct FaceTracker {
 
 impl Default for FaceTracker {
     fn default() -> FaceTracker {
-        let protopath =
-            "D:/Portfolio/bongosero/assets/neural_nets/face_detection/deploy.prototxt.txt"
-                .to_string();
-        let modelpath =
-            "D:/Portfolio/bongosero/assets/neural_nets/face_detection/model.caffemodel".to_string();
+        let protopath = Path::new("./assets/neural_nets/face_detection/deploy.prototxt.txt")
+            .canonicalize()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+
+        let modelpath = Path::new("./assets/neural_nets/face_detection/model.caffemodel")
+            .canonicalize()
+            .unwrap()
+            .to_string_lossy()
+            .to_string();
+        
         let min_confidence = 0.9;
 
         let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();

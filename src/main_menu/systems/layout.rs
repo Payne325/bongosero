@@ -33,7 +33,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                     // Image 1
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/ball_blue_large.png").into(),
+                        image: asset_server.load("sprites/enemy.png").into(),
                         ..default()
                     });
                     // Text
@@ -51,7 +51,7 @@ pub fn build_main_menu(commands: &mut Commands, asset_server: &Res<AssetServer>)
                     // Image 2
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/ball_red_large.png").into(),
+                        image: asset_server.load("sprites/enemy.png").into(),
                         ..default()
                     });
                 });

@@ -90,7 +90,10 @@ pub fn enemy_hit_bullet(
     }
 }
 
-pub fn tick_enemy_spawn_trigger(mut enemy_spawn_trigger: ResMut<EnemySpawnTrigger>, time: Res<Time>) {
+pub fn tick_enemy_spawn_trigger(
+    mut enemy_spawn_trigger: ResMut<EnemySpawnTrigger>,
+    time: Res<Time>,
+) {
     enemy_spawn_trigger.tick(time.delta());
 }
 
