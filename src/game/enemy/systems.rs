@@ -20,7 +20,7 @@ pub fn spawn_intial_enemies(
     asset_server: Res<AssetServer>,
 ) {
     let window = window_query.get_single().unwrap();
-    spawn_single_enemy(&mut commands, &window, &asset_server);
+    spawn_single_enemy(&mut commands, window, &asset_server);
 }
 
 pub fn despawn_enemies(mut commands: Commands, enemy_query: Query<Entity, With<Enemy>>) {
@@ -107,7 +107,7 @@ pub fn spawn_enemies_over_time(
 ) {
     if enemy_spawn_trigger.should_spawn_enemy() {
         let window = window_query.get_single().unwrap();
-        spawn_single_enemy(&mut commands, &window, &asset_server);
+        spawn_single_enemy(&mut commands, window, &asset_server);
     }
 }
 
