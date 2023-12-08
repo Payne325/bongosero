@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
+use bevy_aseprite::anim::AsepriteAnimation;
+use bevy_aseprite::AsepriteBundle;
 use rand::prelude::*;
 
 use crate::events::GameOver;
@@ -114,10 +116,15 @@ fn spawn_single_enemy(commands: &mut Commands, window: &Window, asset_server: &R
     let y = ENEMY_SPAWN_HEIGHT_REL * window.height();
 
     commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_xyz(x, y, 0.0),
-            texture: asset_server.load("sprites/enemy.png"),
-            ..default()
+        AsepriteBundle {
+            aseprite: asset_server.load(EnemyAseprite::PATH),
+            animation: AsepriteAnimation::from(EnemyAseprite::tags::RUN),
+            transform: Transform{
+                translation: Vec3::new(x, y, 0.0),
+                scale: Vec3::splat(1.),
+                ..default()
+            },
+            ..Default::default()
         },
         Enemy {
             direction: Vec2::new(0.0, -1.0).normalize(),

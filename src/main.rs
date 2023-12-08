@@ -4,18 +4,19 @@ mod main_menu;
 mod resources;
 mod systems;
 
+use bevy::prelude::*;
+use bevy_aseprite::AsepritePlugin;
 use game::GamePlugin;
 use main_menu::MainMenuPlugin;
 
 use resources::Bongo;
 use systems::*;
 
-use bevy::prelude::*;
-
 fn main() {
     App::new()
         // Bevy Plugins
         .add_plugins(DefaultPlugins)
+        .add_plugin(AsepritePlugin)
         .add_state::<AppState>()
         // My Plugins
         .add_plugin(MainMenuPlugin)

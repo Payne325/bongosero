@@ -28,7 +28,7 @@ pub fn build_hud(commands: &mut Commands, asset_server: &Res<AssetServer>) -> En
                     // Bullet Image
                     parent.spawn(ImageBundle {
                         style: IMAGE_STYLE,
-                        image: asset_server.load("sprites/enemy.png").into(),
+                        image: asset_server.load("sprites/enemy1.png").into(),
                         ..default()
                     });
                     // Score Text

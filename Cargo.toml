@@ -11,5 +11,6 @@ gc-adapter = {version = "0.1.2", features = ["libusb"]}
 f-trak = "0.2.0"
 bevy = "0.10.0"
 rand = "0.8.5"
+bevy_aseprite = "0.10"
 
 [features]
