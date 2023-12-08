@@ -119,7 +119,7 @@ fn spawn_single_enemy(commands: &mut Commands, window: &Window, asset_server: &R
         AsepriteBundle {
             aseprite: asset_server.load(EnemyAseprite::PATH),
             animation: AsepriteAnimation::from(EnemyAseprite::tags::RUN),
-            transform: Transform{
+            transform: Transform {
                 translation: Vec3::new(x, y, 0.0),
                 scale: Vec3::splat(1.),
                 ..default()

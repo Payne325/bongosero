@@ -26,7 +26,7 @@ impl Default for FaceTracker {
             .unwrap()
             .to_string_lossy()
             .to_string();
-        
+
         let min_confidence = 0.9;
 
         let (bbox_transmitter, bbox_receiver) = mpsc::channel::<Boundingbox>();
