@@ -5,7 +5,7 @@ use bevy_aseprite::aseprite;
 
 aseprite!(pub PlayerAseprite, "sprites/santa_crack.aseprite");
 
-const SHOOT_ANIM_TIME_SECS: f32 = 1.0/3.0;
+const SHOOT_ANIM_TIME_SECS: f32 = 1.0/(12.0/7.0);
 
 #[derive(Component)]
 pub struct Player {
