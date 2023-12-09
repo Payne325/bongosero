@@ -1,9 +1,23 @@
-use std::{path::Path, sync::mpsc, thread};
+use std::{path::Path, sync::mpsc, thread, time::Duration};
 
 use bevy::prelude::*;
+use bevy_aseprite::aseprite;
+
+aseprite!(pub PlayerAseprite, "sprites/santa_crack.aseprite");
+
+const SHOOT_ANIM_TIME_SECS: f32 = 1.0/3.0;
 
 #[derive(Component)]
-pub struct Player {}
+pub struct Player {
+    pub animation_timer: Timer,
+}
+
+impl Default for Player{
+    fn default() -> Self {
+        let animation_timer = Timer::new(Duration::from_secs_f32(SHOOT_ANIM_TIME_SECS), TimerMode::Once);
+        Self { animation_timer }
+    }
+}
 
 type Boundingbox = ((i32, i32), (i32, i32));
 

@@ -13,12 +13,13 @@ use crate::game::bullet::components::PresentAseprite;
 use crate::game::enemy::components::Enemy;
 use crate::game::enemy::resources::EnemySpawnTrigger;
 use crate::game::enemy::*;
+use crate::game::player::components::PlayerAseprite;
 use crate::game::score::resources::*;
 use crate::resources::Bongo;
 
 pub const PLAYER_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 64.0; // This is the player sprite size.
-pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
+//pub const PLAYER_SPAWN_HEIGHT_REL: f32 = PLAYER_SIZE / 600.0;
 
 const F_TRAK_MAX_BNDS: (i32, i32) = (600, 420); //Todo. Create some sort of calibration routine to get this scale
                                                 //const MOVE_DEAD_ZONE: f32 = 0.0;
@@ -31,16 +32,17 @@ pub fn spawn_player(
     let window = window_query.get_single().unwrap();
 
     commands.spawn((
-        SpriteBundle {
-            transform: Transform::from_xyz(
-                window.width() / 2.0,
-                window.height() * PLAYER_SPAWN_HEIGHT_REL,
-                0.0,
-            ),
-            texture: asset_server.load("sprites/player.png"),
-            ..default()
+        AsepriteBundle {
+            aseprite: asset_server.load(PlayerAseprite::PATH),
+            animation: AsepriteAnimation::from(PlayerAseprite::tags::IDLE),
+            transform: Transform {
+                translation: Vec3::new(window.width() / 2.0, PLAYER_SIZE/2.0, 0.0),
+                scale: Vec3::splat(1.),
+                ..default()
+            },
+            ..Default::default()
         },
-        Player {},
+        Player::default(),
     ));
 }
 
@@ -56,6 +58,7 @@ pub fn player_movement(
     time: Res<Time>,
     window_query: Query<&Window, With<PrimaryWindow>>,
     face_capture: NonSend<FaceTracker>,
+    mut animation: Query<(&mut AsepriteAnimation, &mut Player), With<Player>>,
 ) {
     if let Ok(mut transform) = player_query.get_single_mut() {
         let window = window_query.get_single().unwrap();
@@ -80,6 +83,16 @@ pub fn player_movement(
             transform.translation += direction * PLAYER_SPEED * time.delta_seconds();
         }
     }
+
+    if let Ok((mut anim, mut player)) = animation.get_single_mut() {
+        player.animation_timer.tick(time.delta());
+
+        if player.animation_timer.finished() {
+            player.animation_timer.pause();
+            player.animation_timer.reset();
+            *anim = AsepriteAnimation::from(PlayerAseprite::tags::IDLE);
+        }        
+    }
 }
 
 pub fn player_fires_gun(
@@ -87,6 +100,7 @@ pub fn player_fires_gun(
     keyboard_input: Res<Input<KeyCode>>,
     mut bongo: ResMut<Bongo>,
     player_query: Query<&Transform, With<Player>>,
+    mut animation: Query<(&mut AsepriteAnimation, &mut Player), With<Player>>,
     asset_server: Res<AssetServer>,
 ) {
     if let Ok(transform) = player_query.get_single() {
@@ -106,6 +120,12 @@ pub fn player_fires_gun(
                 },
                 Bullet {},
             ));
+
+           if let Ok((mut anim, mut player)) = animation.get_single_mut() {
+                *anim = AsepriteAnimation::from(PlayerAseprite::tags::SHOOT);
+                player.animation_timer.reset();
+                player.animation_timer.unpause();
+           } 
         }
     }
 }
