@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
+use bevy_aseprite::AsepriteBundle;
+use bevy_aseprite::anim::AsepriteAnimation;
 
 use super::components::FaceTracker;
 use super::components::Player;
@@ -7,6 +9,7 @@ use super::components::Player;
 use crate::events::GameOver;
 use crate::game::bullet::components::Bullet;
 use crate::game::bullet::BULLET_SIZE;
+use crate::game::bullet::components::PresentAseprite;
 use crate::game::enemy::components::Enemy;
 use crate::game::enemy::resources::EnemySpawnTrigger;
 use crate::game::enemy::*;
@@ -91,10 +94,15 @@ pub fn player_fires_gun(
             let position = transform.translation + Vec3::new(0.0, BULLET_SIZE / 2.0, 0.0);
 
             commands.spawn((
-                SpriteBundle {
-                    transform: Transform::from_translation(position),
-                    texture: asset_server.load("sprites/bullet.png"),
-                    ..default()
+                AsepriteBundle {
+                    aseprite: asset_server.load(PresentAseprite::PATH),
+                    animation: AsepriteAnimation::from(PresentAseprite::tags::SPIN),
+                    transform: Transform {
+                        translation: position,
+                        scale: Vec3::splat(1.),
+                        ..default()
+                    },
+                    ..Default::default()
                 },
                 Bullet {},
             ));
