@@ -1,74 +1,43 @@
-mod enemy_factory;
+pub mod events;
 mod game;
-mod input_device;
-mod phys;
-mod world;
+mod main_menu;
+mod resources;
+mod systems;
 
-#[cfg(feature = "keyboard")]
-mod keyboard_movement;
-#[cfg(feature = "keyboard")]
-mod keyboard_weapon;
+use bevy::prelude::*;
+use bevy_aseprite::AsepritePlugin;
+use game::GamePlugin;
+use main_menu::MainMenuPlugin;
 
-#[cfg(not(feature = "keyboard"))]
-mod bongosero_movement;
-#[cfg(not(feature = "keyboard"))]
-mod bongosero_weapon;
-
-use quicksilver::{
-    geom::Vector, graphics::Image, input::Key, run, Graphics, Input, Result, Settings, Window,
-};
+use resources::Bongo;
+use systems::*;
 
 fn main() {
-    run(
-        Settings {
-            title: "Bongosero",
-            size: Vector::new(800.0, 600.0),
-            ..Settings::default()
-        },
-        app,
-    );
+    App::new()
+        // Bevy Plugins
+        .add_plugins(DefaultPlugins)
+        .add_plugin(AsepritePlugin)
+        .add_state::<AppState>()
+        // My Plugins
+        .add_plugin(MainMenuPlugin)
+        .add_plugin(GamePlugin)
+        // Resources
+        .init_resource::<Bongo>()
+        // Startup Systems
+        .add_startup_system(spawn_camera)
+        // Systems
+        .add_system(transition_to_game_state)
+        .add_system(transition_to_main_menu_state)
+        .add_system(exit_game)
+        .add_system(handle_game_over)
+        .add_system(tick_bongo)
+        .run();
 }
 
-async fn app(window: Window, mut gfx: Graphics, mut input: Input) -> Result<()> {
-    // This function serves as the control loop, on exit the game ends.
-
-    //Load images
-    let background = Image::load(&gfx, "background.png").await?;
-    let player_sprite = Image::load(&gfx, "mc_spritesheet.png").await?;
-    let bullet_sprite = Image::load(&gfx, "bullet.png").await?;
-    let start_msg = Image::load(&gfx, "start_msg.png").await?;
-    let enemy_sprite = Image::load(&gfx, "enemy.png").await?;
-    let end_msg = Image::load(&gfx, "end_msg.png").await?;
-
-    //Construct object to handle main game functionality.
-    let mut game = game::Game::new(
-        background,
-        player_sprite,
-        bullet_sprite,
-        start_msg,
-        enemy_sprite,
-        end_msg,
-    )
-    .unwrap();
-
-    println!("Game manager initialised...\n");
-
-    loop {
-        //Handle keyboard input
-        //Todo: replace this with bongo/webcam controls
-        while input.next_event().await.is_some() {}
-        game.update(&input);
-
-        //Draw
-        gfx = game.draw(gfx);
-        let _res = gfx.present(&window);
-
-        //Handle exit
-        if input.key_down(Key::Escape) {
-            println!("Goodbye!");
-            break;
-        }
-    }
-
-    Ok(())
+#[derive(States, Debug, Clone, Copy, Eq, PartialEq, Hash, Default)]
+pub enum AppState {
+    #[default]
+    MainMenu,
+    Game,
+    GameOver,
 }
