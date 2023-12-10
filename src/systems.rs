@@ -1,4 +1,5 @@
 use bevy::app::AppExit;
+use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -16,6 +17,11 @@ pub fn spawn_camera(
 
     commands.spawn(Camera2dBundle {
         transform: Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
+        camera_2d: Camera2d {
+            // disable clearing completely (pixels stay as they are)
+            // (preserves output from previous frame or camera/pass)
+            clear_color: ClearColorConfig::Custom(Color::rgb_u8(208, 123, 144)),
+        },
         ..default()
     });
 }
