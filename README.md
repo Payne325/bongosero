@@ -6,8 +6,6 @@ I began developing this as a way of practising developing with the Rust Programm
 
 The game can be controlled with a keyboard for debugging purposes, but the intended use is to control the game using the official Nintendo Gamecube adapter for Wii U, official Nintendo Donkey Konga Bongo controller and a webcam.
 
-I created the character and bullet sprites myself using <a href="https://www.piskelapp.com/">Piskel</a>.
-
 In case you were wondering, someone who plays the bongos is called a bongosero (well that's what google told me anyway ;) ).
 
 ## Dependencies
@@ -37,15 +35,3 @@ Gamecube Controller input is handled by the [`gc-adapter`](https://github.com/ja
 
 For Linux based distros, you shouldn't have any problems.
 For Windows you may have to install the necessary driver for `gc-adapter` to detect any devices. The setup documentation for the [`Dolphin Emulator`](https://dolphin-emu.org/docs/guides/how-use-official-gc-controller-adapter-wii-u/#Windows) provides instructions on how to install this.  
-
-## Building
-
-`Bongosero` has two optional features which can be specified at compile time.
-
-`debug` - Prints debug information to standard output while game is executing.
-
-`keyboard` - compiles keyboard controls instead of bongo and face tracking.
-
-```
-cargo run --features "keyboard debug"
-```
